@@ -1,0 +1,21 @@
+{
+  "name": "takeaway-app-backend",
+  "version": "1.0.0",
+  "description": "A backend api for exotic shaad takeaway app",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js",
+    "start:dev": "nodemon app.js"
+  },
+  "author": "Saumik Dhar",
+  "license": "MIT",
+  "devDependencies": {
+    "nodemon": "^2.0.12",
+    "prettier": "^2.3.2"
+  },
+  "dependencies": {
+    "node": "^16.6.1",
+    "sequelize": "^6.6.5"
+  }
+}
