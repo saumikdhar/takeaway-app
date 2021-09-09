@@ -1,9 +1,9 @@
 import React from 'react';
 import classes from './Home.module.css';
 import Card from '../UI/Card';
-import tikkaMasalaImg from '../../assets/chicken-tikka-masala.jpg';
 import AboutUs from './AboutUs';
 import TypesOfFood from './TypesOfFood';
+import Deals from './Deals';
 
 const Home = () => {
   return (
@@ -31,20 +31,7 @@ const Home = () => {
 
       <AboutUs />
       <TypesOfFood />
-
-      <section id={classes['popular-dishes-container']}>
-        <h2 className={classes['typography-2']}>
-          <span>Our Popular dishes</span>
-        </h2>
-        <div className={classes['dish-container']}>
-          <div className={classes['margin-10']}>
-            <img src={tikkaMasalaImg} alt="Chicken Tikka masala" />
-          </div>
-          <div className={classes['margin-10']}>
-            <img src={tikkaMasalaImg} alt="Chicken Tikka masala" />
-          </div>
-        </div>
-      </section>
+      <Deals />
     </>
   );
 };

@@ -36,6 +36,8 @@
 .food-container {
   display: flex;
   justify-content: space-between;
+  margin: auto;
+  max-width: 1200px;
 }
 
 .food-container img {
@@ -45,6 +47,7 @@
   max-height: 300px;
   object-fit: cover;
   object-position: center;
+  border-radius: 1rem;
 }
 
 .img-container {
@@ -83,7 +86,7 @@
   background: rgba(20, 20, 20, 0.871);
   opacity: 0;
   z-index: 1;
-
+  border-radius: 1rem;
   transform: scaleY(0);
   transform-origin: 100% 100%;
   transition: all 0.3s ease-in-out;
