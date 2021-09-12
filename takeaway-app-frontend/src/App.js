@@ -1,7 +1,7 @@
 import { withRouter, Switch, Route, Redirect } from 'react-router-dom';
-// import Header from './components/Layout/Header';
 import Home from './components/Home/Home';
 import Toolbar from './components/UI/Navigation/Toolbar/Toolbar';
+import Footer from './components/UI/Navigation/Footer/Footer';
 
 const App = props => {
   let routes = (
@@ -24,6 +24,7 @@ const App = props => {
     <>
       <Toolbar />
       {routes}
+      <Footer />
     </>
   );
 };

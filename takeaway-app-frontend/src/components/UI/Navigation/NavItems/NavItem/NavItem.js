@@ -1,4 +1,4 @@
-import classes from './NgnItem.module.css';
+import classes from './NavItem.module.css';
 import { NavLink } from 'react-router-dom';
 
 const NavItem = props => {
