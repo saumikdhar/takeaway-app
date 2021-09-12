@@ -1,8 +1,16 @@
+import { useEffect } from 'react';
+
 import classes from './Deals.module.css';
+import Aos from 'aos';
+import 'aos/dist/aos.css';
 
 const Deals = () => {
+  useEffect(() => {
+    Aos.init({ duration: 3000, once: true });
+  }, []);
+
   return (
-    <section id={classes['popular-dishes-container']}>
+    <section data-aos="fade-down" id={classes['popular-dishes-container']}>
       <h2 className={classes['typography-2']}>
         <span>Our Meal Deals</span>
       </h2>
