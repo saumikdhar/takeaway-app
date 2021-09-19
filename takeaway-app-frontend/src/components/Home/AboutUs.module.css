@@ -71,6 +71,13 @@
   .about-img img {
     max-width: 100%;
   }
+
+  @keyframes about-text-animation {
+    100% {
+      transform: translate(0);
+      margin: auto;
+    }
+  }
 }
 
 /*  */

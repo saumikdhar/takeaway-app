@@ -12,6 +12,7 @@
   font-weight: small;
   color: #fff;
   background: #16a083;
+  border: none;
 }
 
 .btn:hover {
@@ -37,7 +38,7 @@
   display: flex;
   justify-content: space-between;
   margin: auto;
-  max-width: 1200px;
+  /* max-width: 1200px; */
 }
 
 .food-container img {
@@ -139,11 +140,10 @@
 .actions button {
   font: inherit;
   cursor: pointer;
-  background-color: transparent;
+  background-color: #8a2b06;
   border: 1px solid #8a2b06;
   padding: 0.5rem 2rem;
   border-radius: 25px;
-  margin-left: 1rem;
 }
 
 .actions button:hover,
@@ -155,11 +155,6 @@
 
 .actions .button--alt {
   color: #8a2b06;
-}
-
-.actions .button {
-  background-color: #8a2b06;
-  color: white;
 }
 
 @media (max-width: 500px) {

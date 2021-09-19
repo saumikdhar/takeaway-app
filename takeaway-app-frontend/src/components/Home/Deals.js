@@ -10,7 +10,7 @@ const Deals = () => {
   }, []);
 
   return (
-    <section data-aos="fade-down" id={classes['popular-dishes-container']}>
+    <section data-aos="fade-up" id={classes['popular-dishes-container']}>
       <h2 className={classes['typography-2']}>
         <span>Our Meal Deals</span>
       </h2>

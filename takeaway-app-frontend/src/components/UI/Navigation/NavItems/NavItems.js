@@ -5,7 +5,7 @@ export const NavItems = props => {
   return (
     <ul className={classes.NavigationItems}>
       <NavItem link="/home">Home </NavItem>
-      <NavItem link="/auth">Login </NavItem>
+      <NavItem link="/account/login">Login </NavItem>
     </ul>
   );
 };

@@ -5,6 +5,7 @@ import baltiImg from '../../assets/balti.jpg';
 import herbsAndSpicesImg from '../../assets/herbs-and-spices.jpg';
 import southernDishesImg from '../../assets/banana-leaf-southern-dishes.jpg';
 import Modal from '../UI/Modal';
+import Button from '../UI/Button/Button';
 import Aos from 'aos';
 import 'aos/dist/aos.css';
 
@@ -66,9 +67,9 @@ const TypesOfFood = () => {
                 pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia
                 deserunt mollit anim id est laborum.
               </p>
-              <button className={classes['button']} onClick={hideMoreInfoHandler}>
+              <Button className={classes.btn} onClick={hideMoreInfoHandler}>
                 Close
-              </button>
+              </Button>
             </div>{' '}
           </Modal>
         )}

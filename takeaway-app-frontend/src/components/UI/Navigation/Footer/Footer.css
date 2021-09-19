@@ -32,7 +32,7 @@
 }
 
 .footer ul.links li:first-child {
-  margin-left: -5px;
+  margin-left: -45px;
 }
 
 .footer ul.links li {
@@ -71,7 +71,6 @@
 .footer .footer-links .registered {
   width: 100%;
   max-width: 100%;
-  margin: 20px auto 0 auto;
   padding-top: 27px;
   border-top: 1px solid #464646;
 }
@@ -145,7 +144,6 @@ a {
     margin-left: 0;
     padding: 0;
     border-top: 1px solid #464646;
-    border-bottom: 1px solid #464646;
     line-height: 20px;
     border-left: 1px solid #2a3846;
   }
