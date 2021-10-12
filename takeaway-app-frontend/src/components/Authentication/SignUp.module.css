@@ -79,31 +79,6 @@
   color: #0a2396;
 }
 
-.row {
-  overflow: hidden;
-  margin-bottom: 0;
-}
-
-.rememberMe {
-  float: left;
-}
-
-.forgottenPassword {
-  width: 48%;
-  float: right;
-  text-align: right;
-}
-
-.o-link {
-  color: #125fca;
-  text-decoration: underline;
-  background-color: transparent;
-  color: #5212ca;
-  border: none;
-  /* padding: 0.15rem 1.5rem; */
-  font-size: 0.94rem;
-}
-
 .or {
   margin: 3rem;
 }

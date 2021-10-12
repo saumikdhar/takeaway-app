@@ -1,28 +1,45 @@
 import classes from './Authentication.module.css';
+import Loader from '../UI/Loader/Loader';
+import Button from '../UI/Button/Button';
 
+import { Link } from 'react-router-dom';
+import { useState, useRef } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { authSelector, userAuth } from '../../store/auth-slice';
 // import FacebookLogin from 'react-facebook-login';
 
-import { useState, useRef } from 'react';
-
 const Authentication = () => {
+  const dispatch = useDispatch();
   const emailInputRef = useRef();
   const passwordInputRef = useRef();
 
-  const [isLogin, setIsLogin] = useState(true);
-  const [isLoading, setIsLoading] = useState(false);
+  const { isFetching, errorMessage } = useSelector(authSelector);
   const [isChecked, setIsChecked] = useState(true);
+  const [formInputsValidity, setFormInputsValidity] = useState({
+    emailAddress: true,
+    password: true
+  });
 
-  const switchAuthModeHandler = () => {
-    setIsLogin(prevState => !prevState);
-  };
+  const isEmpty = value => value.trim() === '';
 
-  const submitHandler = event => {
+  const submitHandler = async event => {
     event.preventDefault();
 
     const enteredEmail = emailInputRef.current.value;
     const enteredPassword = passwordInputRef.current.value;
 
-    setIsLoading(true);
+    setFormInputsValidity({
+      emailAddress: !isEmpty(enteredEmail),
+      password: !isEmpty(enteredPassword)
+    });
+    const formIsValid = !isEmpty(enteredEmail) && !isEmpty(enteredPassword);
+
+    if (!formIsValid) {
+      return;
+    }
+    const data = { enteredEmail, enteredPassword };
+    dispatch(userAuth(data));
+    passwordInputRef.current.value = '';
   };
 
   const changeRememberMeHandler = () => {
@@ -35,15 +52,22 @@ const Authentication = () => {
 
   return (
     <section className={classes.authentication}>
-      <h1>{isLogin ? 'Sign In' : 'Sign Up'}</h1>
+      <h1>Sign In</h1>
       <form onSubmit={submitHandler}>
         <div className={classes.control}>
+          {errorMessage && <p className={classes.error}> {errorMessage}!</p>}
           <label htmlFor="email">Your Email</label>
-          <input type="email" id="email" required ref={emailInputRef} />
+          <input type="email" id="email" required ref={emailInputRef} maxLength={100} />
+          {!formInputsValidity.emailAddress && (
+            <div className={classes.error}>Please enter a valid email address!</div>
+          )}
         </div>
         <div className={classes.control}>
           <label htmlFor="password">Your Password</label>
-          <input type="password" id="password" required ref={passwordInputRef} />
+          <input type="password" id="password" required ref={passwordInputRef} maxLength={100} />
+          {!formInputsValidity.password && (
+            <div className={classes.error}>Please enter a valid password!</div>
+          )}
         </div>
         <div className={classes.row}>
           <div className={classes.rememberMe}>
@@ -64,9 +88,7 @@ const Authentication = () => {
           </div>
         </div>
         <div className={classes.actions}>
-          <div className={classes.button}>
-            {!isLoading && <button>{isLogin ? 'Login' : 'Create Account'}</button>}
-          </div>
+          <div className={classes.button}>{!isFetching && <Button>Sign In</Button>}</div>
           {/* {isLogin && (
             <FacebookLogin
               appId="604579027581681"
@@ -75,21 +97,24 @@ const Authentication = () => {
               callback={responseFacebook}
             />
           )} */}
-          {isLoading && <p>Sending request...</p>}
-          <button type="button" className={classes.toggle} onClick={switchAuthModeHandler}>
-            {isLogin ? "Don't have an account? Sign Up" : 'Login with existing account'}
-          </button>
+          {isFetching && <Loader />}
+          <Link to="/account/register">
+            {' '}
+            <button type="button" className={classes.toggle}>
+              Don't have an account? Sign Up
+            </button>
+          </Link>
         </div>
 
         <p>
           By creating an account you agree to our{' '}
-          <a href="/terms-and-conditions" className={classes['o-link']}>
-            Terms and Conditions
-          </a>
+          <Link to="/info/terms-and-conditions">
+            <label className={classes['o-link']}>Terms and Conditions</label>
+          </Link>
           . Please read our{' '}
-          <a href="/privacy-policy" className={classes['o-link']}>
-            Privacy Policy.
-          </a>
+          <Link to="/info/privacy-policy">
+            <label className={classes['o-link']}>Privacy Policy.</label>
+          </Link>
         </p>
       </form>
     </section>

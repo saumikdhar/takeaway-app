@@ -18,8 +18,7 @@ app.use((req, res, next) => {
 });
 
 app.use('/auth', authRoutes);
-
-app.listen(process.env.PORT || 8080);
+app.listen(8080);
 
 app.use((error, req, res, next) => {
   console.log(error);

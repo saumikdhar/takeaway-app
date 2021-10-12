@@ -92,6 +92,10 @@ a {
   color: #2a3846;
 }
 
+.footer ul.links li p {
+  color: #2a3846;
+}
+
 .group::after {
   content: '';
   display: block;
@@ -162,7 +166,20 @@ a {
     border-right: 1px solid #464646;
   }
 
+  .footer ul.links li p {
+    width: 50%;
+    padding: 18px 0;
+    box-sizing: border-box;
+    display: block;
+    float: left;
+    border-bottom: 1px solid #464646;
+    border-right: 1px solid #464646;
+  }
+
   .footer ul.links li a:hover {
+    text-decoration: underline !important;
+  }
+  .footer ul.links li p:hover {
     text-decoration: underline !important;
   }
 

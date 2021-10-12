@@ -71,27 +71,23 @@ exports.signup = async (req, res, next) => {
 exports.login = async (req, res, next) => {
   const email = req.body.email;
   const password = req.body.password;
-  let loadedUser;
   try {
     const user = await User.findOne({ email: email });
     if (!user) {
-      const error = new Error('A user with this email could not be found.');
-      error.statusCode = 401;
-      res.status(401).json({ error: error });
+      const error = 'There is no exisiting accounts with this email address';
+      res.status(404).json(error);
       throw error;
     }
-    loadedUser = user;
     const isEqual = await bcrypt.compare(password, user.password);
     if (!isEqual) {
-      const error = new Error('Wrong password!');
-      error.statusCode = 401;
-      res.status(401).json({ error: error });
+      const error = 'Wrong password!';
+      res.status(403).json({ error });
       throw error;
     }
     const token = jwt.sign(
       {
-        email: loadedUser.email,
-        userId: loadedUser._id.toString()
+        email: user.email,
+        userId: user._id.toString()
       },
       'MIIEowIBAAKCAQEAw9ti2r3zJl7h7cSPbeNj+BtvaDGyPrOoG4lbUqEnRL3locQj\n' +
         'c/xZTAlzlVXM44sQ164QWFPCDfKalIfC2WJksm65RpbMGSA16aHO/4SXVOIycSYi\n' +
@@ -120,12 +116,14 @@ exports.login = async (req, res, next) => {
         'p820+e23sMORL+Vt/5CgxnEw1fXKWAUj37tgDAfFwFRD9/j28vHY',
       { expiresIn: '1h' }
     );
-    res.status(200).json({ token: token, userId: loadedUser._id.toString() });
-  } catch (err) {
-    if (!err.statusCode) {
-      err.statusCode = 500;
+    res.status(200).json({ token: token, userId: user._id.toString() });
+    return;
+  } catch (error) {
+    if (!error.statusCode) {
+      error.statusCode = 500;
     }
-    next(err);
+    next(error);
+    return error;
   }
 };
 
