@@ -32,7 +32,7 @@ export const userAuth = createAsyncThunk('auth/login', async (enteredData, thunk
     }
 
     localStorage.setItem('token', data.token);
-    const remainingMilliseconds = 60 * 60; // * 1000;
+    const remainingMilliseconds = 60 * 60 * 1000;
     const expiryDate = new Date(new Date().getTime() + remainingMilliseconds);
     localStorage.setItem('expiryDate', expiryDate.toISOString());
     return data;
@@ -96,11 +96,10 @@ export const checkAuthState = createAsyncThunk('auth/getUserDetails', async (_, 
   let expirationDate = new Date(localStorage.getItem('expiryDate'));
   const rememberMe = localStorage.getItem('rememberMe');
 
-  console.log(rememberMe, expirationDate <= new Date());
   if (rememberMe === 'true' && expirationDate <= new Date()) {
     const remainingMilliseconds = 60 * 60 * 1000;
-    const expiryDate = new Date(new Date().getTime() + remainingMilliseconds);
-    localStorage.setItem('expiryDate', expiryDate.toISOString());
+    expirationDate = new Date(new Date().getTime() + remainingMilliseconds);
+    localStorage.setItem('expiryDate', expirationDate.toISOString());
     console.log('You will be remmebered');
   }
 

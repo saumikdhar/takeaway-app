@@ -9,8 +9,8 @@ export const NavItems = () => {
 
   return (
     <ul className={classes.NavigationItems}>
+      <NavItem link="/home">Home</NavItem>
       {!isLoggedIn && <NavItem link="/account/login">Login </NavItem>}
-      <NavItem link="/home">Home </NavItem>
       {isLoggedIn && <NavItem link="/logout">Logout</NavItem>}
     </ul>
   );

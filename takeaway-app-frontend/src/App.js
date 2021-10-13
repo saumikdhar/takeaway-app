@@ -17,12 +17,13 @@ import Logout from './components/Authentication/Logout/Logout';
 const App = () => {
   const dispatch = useDispatch();
   const { isLoggedIn } = useSelector(authSelector);
+  const token = localStorage.getItem('token');
 
   useEffect(() => {
-    if (isLoggedIn) {
+    if (token) {
       dispatch(checkAuthState());
     }
-  }, [dispatch, isLoggedIn]);
+  }, [dispatch, token]);
 
   let routes = (
     <Switch>
