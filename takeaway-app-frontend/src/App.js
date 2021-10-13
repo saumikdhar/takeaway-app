@@ -2,8 +2,7 @@ import { withRouter, Switch, Route, Redirect } from 'react-router-dom';
 import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { authSelector } from './store/auth-slice';
-import { authActions } from './store/auth-slice';
+import { authSelector, authActions } from './store/auth-slice';
 import Home from './components/pages/Home';
 import Toolbar from './components/UI/Navigation/Toolbar/Toolbar';
 import Footer from './components/UI/Navigation/Footer/Footer';
@@ -11,6 +10,7 @@ import Authentication from './components/Authentication/Authentication';
 import SignUp from './components/Authentication/SignUp';
 import TC from './components/Terms/TermsAndConditions';
 import PrivacyPolicy from './components/Terms/PrivacyPolicy';
+import Logout from './components/Authentication/Logout/Logout';
 
 // import img from './assets/background.jpg';
 
@@ -37,7 +37,7 @@ const App = () => {
   if (isLoggedIn) {
     routes = (
       <Switch>
-        <Route path="/logout" component="" />
+        <Route path="/logout" component={Logout} />
         <Redirect to="/home" />
       </Switch>
     );
