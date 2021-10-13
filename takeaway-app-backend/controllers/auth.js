@@ -168,6 +168,7 @@ exports.updateUserStatus = async (req, res, next) => {
 };
 
 exports.userDetails = async (req, res, next) => {
+  console.log('here');
   const userEmail = req.userEmail;
   try {
     const user = await User.findOne({ where: { email: userEmail } });
@@ -176,6 +177,7 @@ exports.userDetails = async (req, res, next) => {
       res.status(404).json({ message: error });
       throw error;
     }
+    console.log('userId', user._id.toString());
     res.status(200).json({ userId: user._id.toString(), userEmail });
   } catch (error) {
     if (!error.statusCode) {

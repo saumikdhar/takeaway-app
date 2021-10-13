@@ -32,7 +32,7 @@ export const userAuth = createAsyncThunk('auth/login', async (enteredData, thunk
     }
 
     localStorage.setItem('token', data.token);
-    const remainingMilliseconds = 60 * 60 * 1000;
+    const remainingMilliseconds = 60 * 60; // * 1000;
     const expiryDate = new Date(new Date().getTime() + remainingMilliseconds);
     localStorage.setItem('expiryDate', expiryDate.toISOString());
     return data;
@@ -83,7 +83,33 @@ export const userSignUp = createAsyncThunk('user/signUp', async (enteredData, th
   }
 });
 
-export const fetchUserDetails = createAsyncThunk('auth/getUserDetails', async (token, thunkAPI) => {
+export const checkAuthState = createAsyncThunk('auth/getUserDetails', async (_, thunkAPI) => {
+  const state = thunkAPI.getState();
+  const token = localStorage.getItem('token');
+
+  if (!token) {
+    const error = { message: 'No token found' };
+    authSlice.caseReducers.logout(state);
+    return thunkAPI.rejectWithValue(error);
+  }
+
+  let expirationDate = new Date(localStorage.getItem('expiryDate'));
+  const rememberMe = localStorage.getItem('rememberMe');
+
+  console.log(rememberMe, expirationDate <= new Date());
+  if (rememberMe === 'true' && expirationDate <= new Date()) {
+    const remainingMilliseconds = 60 * 60 * 1000;
+    const expiryDate = new Date(new Date().getTime() + remainingMilliseconds);
+    localStorage.setItem('expiryDate', expiryDate.toISOString());
+    console.log('You will be remmebered');
+  }
+
+  if (!expirationDate || expirationDate <= new Date()) {
+    const error = { message: 'Login Timeout' };
+    authSlice.caseReducers.logout(state);
+    return thunkAPI.rejectWithValue(error);
+  }
+
   try {
     const response = await fetch('http://localhost:8080/auth/userDetails', {
       method: 'GET',
@@ -99,6 +125,7 @@ export const fetchUserDetails = createAsyncThunk('auth/getUserDetails', async (t
       console.log(data);
       return thunkAPI.rejectWithValue(data || 'An error occurred');
     }
+
     return data;
   } catch (e) {
     console.log('Error', e.response.data);
@@ -121,6 +148,7 @@ const authSlice = createSlice({
 
   reducers: {
     logout(state, action) {
+      console.log(state);
       state.userId = '';
       state.role = '';
       state.errorMessage = '';
@@ -134,36 +162,13 @@ const authSlice = createSlice({
     checkAuthTimeout(expirationTime, state) {
       setTimeout(() => {
         authSlice.caseReducers.logout(state);
+        console.log('auth timed out');
       }, expirationTime);
-    },
-
-    authCheckState(state) {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        authSlice.caseReducers.logout(state);
-        return;
-      }
-      const expirationDate = new Date(localStorage.getItem('expiryDate'));
-      const rememberMe = localStorage.getItem('remeberMe');
-
-      if (rememberMe && expirationDate <= new Date()) {
-        const remainingMilliseconds = 60 * 60 * 1000;
-        const expiryDate = new Date(new Date().getTime() + remainingMilliseconds);
-        localStorage.setItem('expiryDate', expiryDate.toISOString());
-      }
-
-      if (!expirationDate || expirationDate <= new Date()) {
-        authSlice.caseReducers.logout();
-        return;
-      }
-
-      fetchUserDetails();
-      authSlice.caseReducers.checkAuthTimeout(expirationDate.getTime() - new Date().getTime());
     }
   },
 
   extraReducers: {
-    [fetchUserDetails.fulfilled]: (state, { payload }) => {
+    [checkAuthState.fulfilled]: (state, { payload }) => {
       console.log('user payload', payload);
       state.email = payload.userEmail;
       state.isFetching = false;
@@ -171,10 +176,10 @@ const authSlice = createSlice({
       state.errorMessage = '';
       state.isLoggedIn = true;
     },
-    [fetchUserDetails.pending]: state => {
+    [checkAuthState.pending]: state => {
       state.isFetching = true;
     },
-    [fetchUserDetails.rejected]: (state, { payload }) => {
+    [checkAuthState.rejected]: (state, { payload }) => {
       console.log('payload', payload);
       state.isFetching = false;
       state.errorMessage = payload.message;
