@@ -1,5 +1,9 @@
 import { withRouter, Switch, Route, Redirect } from 'react-router-dom';
+import { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 
+import { authSelector } from './store/auth-slice';
+import { authActions } from './store/auth-slice';
 import Home from './components/pages/Home';
 import Toolbar from './components/UI/Navigation/Toolbar/Toolbar';
 import Footer from './components/UI/Navigation/Footer/Footer';
@@ -10,7 +14,14 @@ import PrivacyPolicy from './components/Terms/PrivacyPolicy';
 
 // import img from './assets/background.jpg';
 
-const App = props => {
+const App = () => {
+  const dispatch = useDispatch();
+  const { isLoggedIn } = useSelector(authSelector);
+
+  useEffect(() => {
+    dispatch(authActions.checkAuthTimeout());
+  }, [dispatch]);
+
   let routes = (
     <Switch>
       <Route path="/account/login" component={Authentication} />
@@ -22,7 +33,8 @@ const App = props => {
     </Switch>
   );
 
-  if (props.isAuthorised) {
+  console.log('isLoggedIn', isLoggedIn);
+  if (isLoggedIn) {
     routes = (
       <Switch>
         <Route path="/logout" component="" />

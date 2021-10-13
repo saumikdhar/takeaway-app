@@ -47,6 +47,8 @@ module.exports = (req, res, next) => {
     error.statusCode = 401;
     throw error;
   }
+  req.userEmail = decodedToken.email;
   req.userId = decodedToken.userId;
+  console.log(decodedToken);
   next();
 };

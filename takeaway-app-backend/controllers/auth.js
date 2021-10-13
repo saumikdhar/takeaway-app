@@ -61,7 +61,7 @@ exports.signup = async (req, res, next) => {
         'p820+e23sMORL+Vt/5CgxnEw1fXKWAUj37tgDAfFwFRD9/j28vHY',
       { expiresIn: '1h' }
     );
-    res.status(201).json({ token: token, message: 'User created!', userId: result._id });
+    res.status(201).json({ token: token, message: 'User created!', userId: result._id, email });
   } catch (err) {
     if (!err.statusCode) {
       err.statusCode = 500;
@@ -83,7 +83,7 @@ exports.login = async (req, res, next) => {
     const isEqual = await bcrypt.compare(password, user.password);
     if (!isEqual) {
       const error = 'Email address or password is incorrect';
-      res.status(403).json({ error });
+      res.status(403).json({ message: error });
       throw error;
     }
     const token = jwt.sign(
@@ -118,8 +118,7 @@ exports.login = async (req, res, next) => {
         'p820+e23sMORL+Vt/5CgxnEw1fXKWAUj37tgDAfFwFRD9/j28vHY',
       { expiresIn: '1h' }
     );
-    res.status(200).json({ token: token, userId: user._id.toString() });
-    return;
+    res.status(200).json({ token: token, userId: user._id.toString(), email });
   } catch (error) {
     if (!error.statusCode) {
       error.statusCode = 500;
@@ -135,7 +134,7 @@ exports.getUserStatus = async (req, res, next) => {
     if (!user) {
       const error = new Error('User not found.');
       error.statusCode = 404;
-      res.status(404).json({ error: error });
+      res.status(404).json({ message: error });
       throw error;
     }
     res.status(200).json({ status: user.status });
@@ -165,5 +164,23 @@ exports.updateUserStatus = async (req, res, next) => {
       err.statusCode = 500;
     }
     next(err);
+  }
+};
+
+exports.userDetails = async (req, res, next) => {
+  const userEmail = req.userEmail;
+  try {
+    const user = await User.findOne({ where: { email: userEmail } });
+    if (!user) {
+      const error = 'User not found!';
+      res.status(404).json({ message: error });
+      throw error;
+    }
+    res.status(200).json({ userId: user._id.toString(), userEmail });
+  } catch (error) {
+    if (!error.statusCode) {
+      error.statusCode = 500;
+    }
+    next(error);
   }
 };

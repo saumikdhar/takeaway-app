@@ -27,11 +27,15 @@ export const userAuth = createAsyncThunk('auth/login', async (enteredData, thunk
       return thunkAPI.rejectWithValue(data || 'Email address or password was incorrect');
     }
 
+    if (isChecked) {
+      localStorage.setItem('rememberMe', true);
+    }
+
     localStorage.setItem('token', data.token);
     const remainingMilliseconds = 60 * 60 * 1000;
     const expiryDate = new Date(new Date().getTime() + remainingMilliseconds);
     localStorage.setItem('expiryDate', expiryDate.toISOString());
-    return response.json();
+    return data;
   } catch (e) {
     console.log('Error', e.response.data);
     return thunkAPI.rejectWithValue(e.response.data);
@@ -72,7 +76,30 @@ export const userSignUp = createAsyncThunk('user/signUp', async (enteredData, th
     const remainingMilliseconds = 60 * 60 * 1000;
     const expiryDate = new Date(new Date().getTime() + remainingMilliseconds);
     localStorage.setItem('expiryDate', expiryDate.toISOString());
-    return response.json();
+    return data;
+  } catch (e) {
+    console.log('Error', e.response.data);
+    return thunkAPI.rejectWithValue(e.response.data);
+  }
+});
+
+export const fetchUserDetails = createAsyncThunk('auth/getUserDetails', async (token, thunkAPI) => {
+  try {
+    const response = await fetch('http://localhost:8080/auth/userDetails', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + token
+      }
+    });
+
+    let data = await response.json();
+
+    if (!response.ok) {
+      console.log(data);
+      return thunkAPI.rejectWithValue(data || 'An error occurred');
+    }
+    return data;
   } catch (e) {
     console.log('Error', e.response.data);
     return thunkAPI.rejectWithValue(e.response.data);
@@ -91,9 +118,9 @@ const authSlice = createSlice({
     isFetching: false,
     errorMessage: ''
   },
+
   reducers: {
     logout(state, action) {
-      state.token = '';
       state.userId = '';
       state.role = '';
       state.errorMessage = '';
@@ -102,23 +129,64 @@ const authSlice = createSlice({
       state.username = '';
       localStorage.removeItem('token');
       localStorage.removeItem('expirationDate');
-      localStorage.removeItem('userId');
-      localStorage.removeItem('role');
-      localStorage.removeItem('email');
+    },
+
+    checkAuthTimeout(expirationTime, state) {
+      setTimeout(() => {
+        authSlice.caseReducers.logout(state);
+      }, expirationTime);
+    },
+
+    authCheckState(state) {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        authSlice.caseReducers.logout(state);
+        return;
+      }
+      const expirationDate = new Date(localStorage.getItem('expiryDate'));
+      const rememberMe = localStorage.getItem('remeberMe');
+
+      if (rememberMe && expirationDate <= new Date()) {
+        const remainingMilliseconds = 60 * 60 * 1000;
+        const expiryDate = new Date(new Date().getTime() + remainingMilliseconds);
+        localStorage.setItem('expiryDate', expiryDate.toISOString());
+      }
+
+      if (!expirationDate || expirationDate <= new Date()) {
+        authSlice.caseReducers.logout();
+        return;
+      }
+
+      fetchUserDetails();
+      authSlice.caseReducers.checkAuthTimeout(expirationDate.getTime() - new Date().getTime());
     }
   },
 
   extraReducers: {
-    [userAuth.fulfilled]: (state, { payload }) => {
-      state.email = payload.email;
-      state.username = payload.firstName + ' ' + payload.surname;
+    [fetchUserDetails.fulfilled]: (state, { payload }) => {
+      console.log('user payload', payload);
+      state.email = payload.userEmail;
       state.isFetching = false;
-      state.token = payload.token;
       state.userId = payload.userId;
       state.errorMessage = '';
-      state.role = payload.role;
       state.isLoggedIn = true;
-      return state;
+    },
+    [fetchUserDetails.pending]: state => {
+      state.isFetching = true;
+    },
+    [fetchUserDetails.rejected]: (state, { payload }) => {
+      console.log('payload', payload);
+      state.isFetching = false;
+      state.errorMessage = payload.message;
+    },
+
+    [userAuth.fulfilled]: (state, { payload }) => {
+      console.log('user payload', payload);
+      state.email = payload.email;
+      state.isFetching = false;
+      state.userId = payload.userId;
+      state.errorMessage = '';
+      state.isLoggedIn = true;
     },
     [userAuth.rejected]: (state, { payload }) => {
       console.log('payload', payload);
@@ -133,10 +201,8 @@ const authSlice = createSlice({
       console.log('payload', payload);
       state.isFetching = false;
       state.email = payload.email;
-      state.username = payload.firstName + ' ' + payload.surname;
+      state.userId = payload.userId;
       state.isLoggedIn = true;
-      state.role = payload.role;
-      return state;
     },
     [userSignUp.pending]: state => {
       state.isFetching = true;
@@ -144,7 +210,6 @@ const authSlice = createSlice({
     [userSignUp.rejected]: (state, { payload }) => {
       state.isFetching = false;
       state.errorMessage = payload.message || 'An error occurred';
-      console.log('payload', payload);
     }
   }
 });
