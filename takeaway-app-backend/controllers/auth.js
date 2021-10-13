@@ -5,26 +5,28 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 
 exports.signup = async (req, res, next) => {
+  const email = req.body.email;
+  const firstName = req.body.firstName;
+  const surname = req.body.surname;
+  const password = req.body.password;
+
   const errors = validationResult(req);
+
+  console.log(errors.errors[0].msg);
+
   if (!errors.isEmpty()) {
-    const error = new Error('Validation failed.');
-    error.statusCode = 422;
-    const email = req.body.email;
-    const name = req.body.name;
-    const password = req.body.password;
-    console.log(email, password, name);
-    res.status(422).json({ error: error });
+    console.log(email, password, firstName, surname);
+    res.status(422).json({ message: errors.errors[0].msg });
     return;
   }
-  const email = req.body.email;
-  const name = req.body.name;
-  const password = req.body.password;
+
   try {
     const hashedPw = await bcrypt.hash(password, 12);
     const user = new User({
-      email: email,
+      email,
       password: hashedPw,
-      name: name
+      firstName,
+      surname
     });
     const result = await user.save();
     const token = jwt.sign(
@@ -75,12 +77,12 @@ exports.login = async (req, res, next) => {
     const user = await User.findOne({ email: email });
     if (!user) {
       const error = 'There is no exisiting accounts with this email address';
-      res.status(404).json(error);
+      res.status(404).json({ message: error });
       throw error;
     }
     const isEqual = await bcrypt.compare(password, user.password);
     if (!isEqual) {
-      const error = 'Wrong password!';
+      const error = 'Email address or password is incorrect';
       res.status(403).json({ error });
       throw error;
     }

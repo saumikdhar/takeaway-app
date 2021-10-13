@@ -32,12 +32,13 @@ const Authentication = () => {
       emailAddress: !isEmpty(enteredEmail),
       password: !isEmpty(enteredPassword)
     });
+
     const formIsValid = !isEmpty(enteredEmail) && !isEmpty(enteredPassword);
 
     if (!formIsValid) {
       return;
     }
-    const data = { enteredEmail, enteredPassword };
+    const data = { enteredEmail, enteredPassword, isChecked };
     dispatch(userAuth(data));
     passwordInputRef.current.value = '';
   };
