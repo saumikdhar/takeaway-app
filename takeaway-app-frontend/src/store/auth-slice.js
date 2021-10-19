@@ -1,7 +1,13 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
 export const userAuth = createAsyncThunk('auth/login', async (enteredData, thunkAPI) => {
-  const { enteredEmail: email, enteredPassword: password, isChecked } = enteredData;
+  const { enteredEmail: email, enteredPassword: password, isChecked: rememberMe } = enteredData;
+
+  let remainingMilliseconds = 60 * 60 * 1000 * 24 * 3;
+  if (!rememberMe) {
+    remainingMilliseconds = 60 * 60 * 1000;
+  }
+
   try {
     const response = await fetch('http://localhost:8080/auth/login', {
       method: 'POST',
@@ -10,7 +16,8 @@ export const userAuth = createAsyncThunk('auth/login', async (enteredData, thunk
       },
       body: JSON.stringify({
         email,
-        password
+        password,
+        rememberMe
       })
     });
 
@@ -27,12 +34,7 @@ export const userAuth = createAsyncThunk('auth/login', async (enteredData, thunk
       return thunkAPI.rejectWithValue(data || 'Email address or password was incorrect');
     }
 
-    if (isChecked) {
-      localStorage.setItem('rememberMe', true);
-    }
-
     localStorage.setItem('token', data.token);
-    const remainingMilliseconds = 60 * 60 * 1000;
     const expiryDate = new Date(new Date().getTime() + remainingMilliseconds);
     localStorage.setItem('expiryDate', expiryDate.toISOString());
     return data;
@@ -90,20 +92,15 @@ export const checkAuthState = createAsyncThunk('auth/getUserDetails', async (_, 
 
   if (!token) {
     const error = { message: 'No token found' };
+    clearLocalStorage();
     return thunkAPI.rejectWithValue(error);
   }
 
   let expirationDate = new Date(localStorage.getItem('expiryDate'));
-  const rememberMe = localStorage.getItem('rememberMe');
-
-  // if (rememberMe === 'true' && expirationDate <= new Date()) {
-  //   const remainingMilliseconds = 60 * 60 * 1000;
-  //   expirationDate = new Date(new Date().getTime() + remainingMilliseconds);
-  //   localStorage.setItem('expiryDate', expirationDate.toISOString());
-  // }
 
   if (!expirationDate || expirationDate <= new Date()) {
     const error = { message: 'Login Timeout' };
+    clearLocalStorage();
     return thunkAPI.rejectWithValue(error);
   }
 
@@ -113,8 +110,7 @@ export const checkAuthState = createAsyncThunk('auth/getUserDetails', async (_, 
       headers: {
         'Content-Type': 'application/json',
         Authorization: 'Bearer ' + token
-      },
-      body: JSON.stringify({ rememberMe })
+      }
     });
 
     let data = await response.json();
@@ -129,6 +125,11 @@ export const checkAuthState = createAsyncThunk('auth/getUserDetails', async (_, 
     return thunkAPI.rejectWithValue(e.response.data);
   }
 });
+
+export const clearLocalStorage = () => {
+  localStorage.removeItem('token');
+  localStorage.removeItem('expirationDate');
+};
 
 const authSlice = createSlice({
   name: 'auth',
@@ -157,7 +158,6 @@ const authSlice = createSlice({
       state.username = '';
       localStorage.removeItem('token');
       localStorage.removeItem('expirationDate');
-      localStorage.removeItem('rememberMe');
     },
 
     checkAuthTimeout(expirationTime, state) {

@@ -75,6 +75,14 @@ exports.signup = async (req, res, next) => {
 exports.login = async (req, res, next) => {
   const email = req.body.email;
   const password = req.body.password;
+  const rememberMe = req.body.rememberMe;
+
+  let expiry = '1h';
+
+  if (rememberMe) {
+    expiry = '3d';
+  }
+
   try {
     const user = await User.findOne({ email: email });
     if (!user) {
@@ -118,7 +126,7 @@ exports.login = async (req, res, next) => {
         'XU/dAoGBAJhQSP2urKQ4SgSBaBBf22qEA7ybfcd6LboOXDtVKzxdqBi5nW5vsLGR\n' +
         'PlzK4+zr7NvDVEB1vltuJcEL69ubd78RU9eQs/zw6NlZEn5XKDH+Ml9Er5bTqTaB\n' +
         'p820+e23sMORL+Vt/5CgxnEw1fXKWAUj37tgDAfFwFRD9/j28vHY',
-      { expiresIn: '1h' }
+      { expiresIn: expiry }
     );
     res.status(200).json({ token: token, userId: user._id.toString(), email });
   } catch (error) {

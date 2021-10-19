@@ -20,7 +20,7 @@ const userSchema = new Schema({
   },
   status: {
     type: String,
-    default: 'active'
+    default: 'Not Verified'
   },
   phoneNumber: {
     type: String,
