@@ -86,12 +86,10 @@ export const userSignUp = createAsyncThunk('user/signUp', async (enteredData, th
 });
 
 export const checkAuthState = createAsyncThunk('auth/getUserDetails', async (_, thunkAPI) => {
-  const state = thunkAPI.getState();
   const token = localStorage.getItem('token');
 
   if (!token) {
     const error = { message: 'No token found' };
-    authSlice.caseReducers.logout(state);
     return thunkAPI.rejectWithValue(error);
   }
 
@@ -106,7 +104,6 @@ export const checkAuthState = createAsyncThunk('auth/getUserDetails', async (_, 
 
   if (!expirationDate || expirationDate <= new Date()) {
     const error = { message: 'Login Timeout' };
-    authSlice.caseReducers.logout(state);
     return thunkAPI.rejectWithValue(error);
   }
 
@@ -132,12 +129,6 @@ export const checkAuthState = createAsyncThunk('auth/getUserDetails', async (_, 
     return thunkAPI.rejectWithValue(e.response.data);
   }
 });
-
-export const checkAuthTimeout = (expirationTime, state) => {
-  setTimeout(() => {
-    authSlice.caseReducers.logout(state);
-  }, expirationTime);
-};
 
 const authSlice = createSlice({
   name: 'auth',
@@ -167,6 +158,12 @@ const authSlice = createSlice({
       localStorage.removeItem('token');
       localStorage.removeItem('expirationDate');
       localStorage.removeItem('rememberMe');
+    },
+
+    checkAuthTimeout(expirationTime, state) {
+      setTimeout(() => {
+        authSlice.caseReducers.logout(state);
+      }, expirationTime);
     }
   },
 
@@ -183,9 +180,8 @@ const authSlice = createSlice({
       state.isFetching = true;
     },
     [checkAuthState.rejected]: (state, { payload, error }) => {
-      console.log('payload', payload);
+      console.log('payload', payload, ' ', payload.message);
       state.isFetching = false;
-      state.errorMessage = payload.message;
     },
 
     [userAuth.fulfilled]: (state, { payload }) => {

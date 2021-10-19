@@ -9,6 +9,7 @@ module.exports = (req, res, next) => {
     error.statusCode = 401;
     throw error;
   }
+
   const token = authHeader.split(' ')[1];
   let decodedToken;
   try {
@@ -51,6 +52,6 @@ module.exports = (req, res, next) => {
   }
   req.userEmail = decodedToken.email;
   req.userId = decodedToken.userId;
-  console.log(decodedToken);
+  console.log('decoded token', decodedToken);
   next();
 };
