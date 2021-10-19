@@ -9,6 +9,7 @@ exports.signup = async (req, res, next) => {
   const firstName = req.body.firstName;
   const surname = req.body.surname;
   const password = req.body.password;
+  const phoneNumber = req.body.phoneNumber;
 
   const errors = validationResult(req);
 
@@ -26,7 +27,8 @@ exports.signup = async (req, res, next) => {
       email,
       password: hashedPw,
       firstName,
-      surname
+      surname,
+      phoneNumber
     });
     const result = await user.save();
     const token = jwt.sign(
@@ -168,7 +170,6 @@ exports.updateUserStatus = async (req, res, next) => {
 };
 
 exports.userDetails = async (req, res, next) => {
-  console.log('here');
   const userEmail = req.userEmail;
   try {
     const user = await User.findOne({ where: { email: userEmail } });

@@ -40,6 +40,7 @@ const App = () => {
     routes = (
       <Switch>
         <Route path="/logout" component={Logout} />
+        <Route path="/home" component={Home} />
         <Redirect to="/home" />
       </Switch>
     );

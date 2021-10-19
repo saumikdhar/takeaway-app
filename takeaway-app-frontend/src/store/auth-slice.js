@@ -47,7 +47,8 @@ export const userSignUp = createAsyncThunk('user/signUp', async (enteredData, th
     enteredFirstName: firstName,
     enteredSurname: surname,
     enteredEmail: email,
-    enteredPassword: password
+    enteredPassword: password,
+    enteredPhoneNumber: phoneNumber
   } = enteredData;
 
   try {
@@ -60,7 +61,8 @@ export const userSignUp = createAsyncThunk('user/signUp', async (enteredData, th
         firstName,
         surname,
         email,
-        password
+        password,
+        phoneNumber
       })
     });
 
@@ -94,14 +96,13 @@ export const checkAuthState = createAsyncThunk('auth/getUserDetails', async (_, 
   }
 
   let expirationDate = new Date(localStorage.getItem('expiryDate'));
-  const rememberMe = localStorage.getItem('rememberMe');
+  // const rememberMe = localStorage.getItem('rememberMe');
 
-  if (rememberMe === 'true' && expirationDate <= new Date()) {
-    const remainingMilliseconds = 60 * 60 * 1000;
-    expirationDate = new Date(new Date().getTime() + remainingMilliseconds);
-    localStorage.setItem('expiryDate', expirationDate.toISOString());
-    console.log('You will be remmebered');
-  }
+  // if (rememberMe === 'true' && expirationDate <= new Date()) {
+  //   const remainingMilliseconds = 60 * 60 * 1000;
+  //   expirationDate = new Date(new Date().getTime() + remainingMilliseconds);
+  //   localStorage.setItem('expiryDate', expirationDate.toISOString());
+  // }
 
   if (!expirationDate || expirationDate <= new Date()) {
     const error = { message: 'Login Timeout' };
@@ -115,7 +116,8 @@ export const checkAuthState = createAsyncThunk('auth/getUserDetails', async (_, 
       headers: {
         'Content-Type': 'application/json',
         Authorization: 'Bearer ' + token
-      }
+      },
+      body: JSON.stringify({ rememberMe: 'true' })
     });
 
     let data = await response.json();
@@ -124,7 +126,6 @@ export const checkAuthState = createAsyncThunk('auth/getUserDetails', async (_, 
       console.log(data);
       return thunkAPI.rejectWithValue(data || 'An error occurred');
     }
-
     return data;
   } catch (e) {
     console.log('Error', e.response.data);
@@ -146,6 +147,9 @@ const authSlice = createSlice({
   },
 
   reducers: {
+    clearState(state) {
+      state.errorMessage = '';
+    },
     logout(state, action) {
       console.log(state);
       state.userId = '';
@@ -156,12 +160,12 @@ const authSlice = createSlice({
       state.username = '';
       localStorage.removeItem('token');
       localStorage.removeItem('expirationDate');
+      localStorage.removeItem('rememberMe');
     },
 
     checkAuthTimeout(expirationTime, state) {
       setTimeout(() => {
         authSlice.caseReducers.logout(state);
-        console.log('auth timed out');
       }, expirationTime);
     }
   },
@@ -178,7 +182,7 @@ const authSlice = createSlice({
     [checkAuthState.pending]: state => {
       state.isFetching = true;
     },
-    [checkAuthState.rejected]: (state, { payload }) => {
+    [checkAuthState.rejected]: (state, { payload, error }) => {
       console.log('payload', payload);
       state.isFetching = false;
       state.errorMessage = payload.message;

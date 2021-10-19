@@ -22,6 +22,10 @@ const userSchema = new Schema({
     type: String,
     default: 'active'
   },
+  phoneNumber: {
+    type: String,
+    required: true
+  },
   orders: [
     {
       type: Schema.Types.ObjectId,

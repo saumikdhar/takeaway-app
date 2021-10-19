@@ -36,4 +36,4 @@ mongoose
   .then(result => {
     console.log('Running app');
   })
-  .catch(err => console.log(err));
+  .catch(err => console.log(err), 60000);
