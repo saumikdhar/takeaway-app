@@ -2,8 +2,8 @@ const jwt = require('jsonwebtoken');
 
 module.exports = (req, res, next) => {
   const authHeader = req.get('Authorization');
-  // const rememberMe = req.body.rememberMe;
-  // console.log('rememberme', rememberMe);
+  const rememberMe = req.body.rememberMe;
+
   if (!authHeader) {
     const error = new Error('Not authenticated.');
     error.statusCode = 401;

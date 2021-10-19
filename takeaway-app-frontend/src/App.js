@@ -21,7 +21,7 @@ const App = () => {
 
   useEffect(() => {
     if (token) {
-      dispatch(checkAuthState());
+      dispatch(checkAuthState);
     }
   }, [dispatch, token]);
 

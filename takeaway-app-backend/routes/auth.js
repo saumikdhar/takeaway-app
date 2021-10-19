@@ -38,6 +38,6 @@ router.patch(
   authController.updateUserStatus
 );
 
-router.get('/userDetails', isAuth, authController.userDetails);
+router.post('/userDetails', isAuth, authController.userDetails);
 
 module.exports = router;

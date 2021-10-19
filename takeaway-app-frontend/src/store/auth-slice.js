@@ -96,7 +96,7 @@ export const checkAuthState = createAsyncThunk('auth/getUserDetails', async (_, 
   }
 
   let expirationDate = new Date(localStorage.getItem('expiryDate'));
-  // const rememberMe = localStorage.getItem('rememberMe');
+  const rememberMe = localStorage.getItem('rememberMe');
 
   // if (rememberMe === 'true' && expirationDate <= new Date()) {
   //   const remainingMilliseconds = 60 * 60 * 1000;
@@ -112,18 +112,18 @@ export const checkAuthState = createAsyncThunk('auth/getUserDetails', async (_, 
 
   try {
     const response = await fetch('http://localhost:8080/auth/userDetails', {
-      method: 'GET',
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         Authorization: 'Bearer ' + token
       },
-      body: JSON.stringify({ rememberMe: 'true' })
+      body: JSON.stringify({ rememberMe })
     });
 
     let data = await response.json();
 
     if (!response.ok) {
-      console.log(data);
+      console.log('error', data);
       return thunkAPI.rejectWithValue(data || 'An error occurred');
     }
     return data;
@@ -132,6 +132,12 @@ export const checkAuthState = createAsyncThunk('auth/getUserDetails', async (_, 
     return thunkAPI.rejectWithValue(e.response.data);
   }
 });
+
+export const checkAuthTimeout = (expirationTime, state) => {
+  setTimeout(() => {
+    authSlice.caseReducers.logout(state);
+  }, expirationTime);
+};
 
 const authSlice = createSlice({
   name: 'auth',
@@ -161,12 +167,6 @@ const authSlice = createSlice({
       localStorage.removeItem('token');
       localStorage.removeItem('expirationDate');
       localStorage.removeItem('rememberMe');
-    },
-
-    checkAuthTimeout(expirationTime, state) {
-      setTimeout(() => {
-        authSlice.caseReducers.logout(state);
-      }, expirationTime);
     }
   },
 
