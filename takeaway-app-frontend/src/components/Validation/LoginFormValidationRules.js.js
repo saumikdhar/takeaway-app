@@ -31,7 +31,7 @@ export const checkValidity = (value, rules) => {
 
   if (rules.maxLength) {
     if (value.length > rules.maxLength) {
-      return 'can only have a maximum of ' + rules.minLength + ' characters!';
+      return 'can only have a maximum of ' + rules.maxLength + ' characters!';
     }
   }
   return false;
