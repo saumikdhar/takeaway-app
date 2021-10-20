@@ -6,6 +6,7 @@ import Button from '../UI/Button/Button';
 import Loader from '../UI/Loader/Loader';
 import { useDispatch, useSelector } from 'react-redux';
 import { authSelector, userSignUp, authActions } from '../../store/auth-slice';
+import { isEmpty, checkValidity } from '../Validation/LoginFormValidationRules.js';
 
 const SignUp = () => {
   const dispatch = useDispatch();
@@ -17,14 +18,12 @@ const SignUp = () => {
 
   const { isFetching, errorMessage } = useSelector(authSelector);
   const [formInputsValidity, setFormInputsValidity] = useState({
-    firstName: true,
-    surname: true,
-    emailAddress: true,
+    firstName: false,
+    surname: false,
+    emailAddress: false,
     password: true,
-    phoneNumber: true
+    phoneNumber: false
   });
-
-  const isEmpty = value => value.trim() === '';
 
   const submitHandler = async event => {
     event.preventDefault();
@@ -35,22 +34,33 @@ const SignUp = () => {
     const enteredSurname = surnameInputRef.current.value;
     const enteredPhoneNumber = phoneNumberInputRef.current.value.toString();
 
+    const enteredEmailValidity = checkValidity({ email: enteredEmail });
+    const enteredPasswordValidity = !isEmpty(enteredPassword);
+    const enteredFirstNameValidity = checkValidity(enteredFirstName, {
+      minLength: 3,
+      maxLength: 20
+    });
+    const enteredSurnameValidity = checkValidity(enteredSurname, { minLength: 3, maxLength: 20 });
+    const enteredPhoneNumberValidity = checkValidity(enteredPhoneNumber, {
+      minLength: 11,
+      maxLength: 11
+    });
+
     setFormInputsValidity({
-      firstName: !isEmpty(enteredFirstName),
-      surname: !isEmpty(enteredSurname),
-      emailAddress:
-        !isEmpty(enteredEmail) && /^[a-zA-Z0-9]+@(?:[a-zA-Z0-9]+\.)+[A-Za-z]+$/.test(enteredEmail),
-      password: !isEmpty(enteredPassword),
-      phoneNumber: !isEmpty(enteredPhoneNumber)
+      firstName: enteredFirstNameValidity,
+      surname: enteredSurnameValidity,
+      emailAddress: enteredEmailValidity,
+      password: enteredPasswordValidity,
+      phoneNumber: enteredPhoneNumberValidity
     });
 
     const formIsValid =
-      !isEmpty(enteredFirstName.trim()) &&
-      !isEmpty(enteredSurname.trim()) &&
-      !isEmpty(enteredEmail.trim()) &&
-      /^[a-zA-Z0-9]+@(?:[a-zA-Z0-9]+\.)+[A-Za-z]+$/.test(enteredEmail) &&
-      !isEmpty(enteredPassword.trim()) &&
-      !isEmpty(enteredPhoneNumber.trim());
+      enteredEmailValidity &&
+      enteredSurnameValidity &&
+      enteredEmailValidity &&
+      enteredPasswordValidity &&
+      enteredPhoneNumberValidity;
+
     if (!formIsValid) {
       return;
     }
@@ -63,23 +73,6 @@ const SignUp = () => {
       enteredPhoneNumber
     };
     dispatch(userSignUp(data));
-  };
-
-  const checkValidity = (value, rules) => {
-    let isValid = true;
-    if (!rules) {
-      return true;
-    }
-    if (rules.required) {
-      isValid = value.trim() !== '' && isValid;
-    }
-    if (rules.minLength) {
-      isValid = value.length >= rules.minLength && isValid;
-    }
-    if (rules.maxLength) {
-      isValid = value.length <= rules.maxLength && isValid;
-    }
-    return isValid;
   };
 
   const clearErrorHandler = () => {
@@ -96,36 +89,36 @@ const SignUp = () => {
         <div className={classes.control}>
           <label htmlFor="firstName">Your First Name</label>
           <input type="text" id="firstName" required ref={firstNameInputRef} />
-          {!formInputsValidity.firstName && (
+          {formInputsValidity.firstName && (
             <div className={classes.error}>
-              <div className={classes.left}>Please enter a valid first name!</div>
+              <div className={classes.left}>First name {formInputsValidity.firstName}</div>
             </div>
           )}
         </div>
         <div className={classes.control}>
           <label htmlFor="surname">Your Surname</label>
           <input type="text" id="surname" required ref={surnameInputRef} />
-          {!formInputsValidity.surname && (
+          {formInputsValidity.surname && (
             <div className={classes.error}>
-              <div className={classes.left}>Please enter a valid surname!</div>
+              <div className={classes.left}>Surname {formInputsValidity.surname}</div>
             </div>
           )}
         </div>
         <div className={classes.control}>
           <label htmlFor="phoneNumber">Your phone number</label>
           <input type="number" id="phoneNumber" required ref={phoneNumberInputRef} />
-          {!formInputsValidity.phoneNumber && (
+          {formInputsValidity.phoneNumber && (
             <div className={classes.error}>
-              <div className={classes.left}>Please enter a valid phone number!</div>
+              <div className={classes.left}>Phone number needs to have 11 digits!</div>
             </div>
           )}
         </div>
         <div className={classes.control}>
           <label htmlFor="email">Your Email</label>
           <input type="email" id="email" required ref={emailInputRef} />
-          {!formInputsValidity.emailAddress && (
+          {formInputsValidity.emailAddress && (
             <div className={classes.error}>
-              <div className={classes.left}>Please enter a valid email address!</div>
+              <div className={classes.left}>{formInputsValidity.emailAddress}</div>
             </div>
           )}
         </div>
