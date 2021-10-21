@@ -7,6 +7,7 @@ import Loader from '../UI/Loader/Loader';
 import { useDispatch, useSelector } from 'react-redux';
 import { authSelector, userSignUp, authActions } from '../../store/auth-slice';
 import { isEmpty, checkValidity } from '../Validation/LoginFormValidationRules.js';
+import PasswordStrengthMeter from '../UI/PasswordStrengthMeter/PasswordStrengthMeter';
 
 const SignUp = () => {
   const dispatch = useDispatch();
@@ -15,13 +16,14 @@ const SignUp = () => {
   const firstNameInputRef = useRef();
   const surnameInputRef = useRef();
   const phoneNumberInputRef = useRef();
+  const [password, setPassword] = useState('');
 
   const { isFetching, errorMessage } = useSelector(authSelector);
   const [formInputsValidity, setFormInputsValidity] = useState({
     firstName: false,
     surname: false,
     emailAddress: false,
-    password: true,
+    password: false,
     phoneNumber: false
   });
 
@@ -55,11 +57,11 @@ const SignUp = () => {
     });
 
     const formIsValid =
-      enteredEmailValidity &&
-      enteredSurnameValidity &&
-      enteredEmailValidity &&
-      enteredPasswordValidity &&
-      enteredPhoneNumberValidity;
+      !enteredEmailValidity &&
+      !enteredSurnameValidity &&
+      !enteredEmailValidity &&
+      !enteredPasswordValidity &&
+      !enteredPhoneNumberValidity;
 
     if (!formIsValid) {
       return;
@@ -124,7 +126,14 @@ const SignUp = () => {
         </div>
         <div className={classes.control}>
           <label htmlFor="password">Your Password</label>
-          <input type="password" id="password" required ref={passwordInputRef} />
+          <input
+            type="password"
+            id="password"
+            required
+            ref={passwordInputRef}
+            onChange={e => setPassword(e.target.value)}
+          />
+          <PasswordStrengthMeter password={password} />
           {!formInputsValidity.password && (
             <div className={classes.error}>
               <div className={classes.left}>Please enter a valid password!</div>
