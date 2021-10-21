@@ -30,11 +30,11 @@ const SignUp = () => {
   const submitHandler = async event => {
     event.preventDefault();
 
-    const enteredEmail = emailInputRef.current.value;
-    const enteredPassword = passwordInputRef.current.value;
-    const enteredFirstName = firstNameInputRef.current.value;
-    const enteredSurname = surnameInputRef.current.value;
-    const enteredPhoneNumber = phoneNumberInputRef.current.value.toString();
+    let enteredEmail = emailInputRef.current.value;
+    let enteredPassword = passwordInputRef.current.value;
+    let enteredFirstName = firstNameInputRef.current.value;
+    let enteredSurname = surnameInputRef.current.value;
+    let enteredPhoneNumber = phoneNumberInputRef.current.value.toString();
 
     const enteredEmailValidity = checkValidity({ email: enteredEmail });
     const enteredPasswordValidity = !isEmpty(enteredPassword);
@@ -60,12 +60,19 @@ const SignUp = () => {
       !enteredEmailValidity &&
       !enteredSurnameValidity &&
       !enteredEmailValidity &&
-      !enteredPasswordValidity &&
+      enteredPasswordValidity &&
       !enteredPhoneNumberValidity;
 
     if (!formIsValid) {
       return;
     }
+
+    enteredEmail = enteredEmail.trim();
+    enteredSurname = enteredSurname.trim();
+    enteredFirstName = enteredFirstName.trim();
+    enteredPhoneNumber = enteredPhoneNumber.trim();
+
+    console.log(enteredEmail);
 
     const data = {
       enteredFirstName,
