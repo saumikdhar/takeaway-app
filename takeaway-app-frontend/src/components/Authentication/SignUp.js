@@ -6,7 +6,7 @@ import Button from '../UI/Button/Button';
 import Loader from '../UI/Loader/Loader';
 import { useDispatch, useSelector } from 'react-redux';
 import { authSelector, userSignUp, authActions } from '../../store/auth-slice';
-import { isEmpty, checkValidity } from '../Validation/LoginFormValidationRules.js';
+import { checkValidity } from '../Validation/LoginFormValidationRules.js';
 import PasswordStrengthMeter from '../UI/PasswordStrengthMeter/PasswordStrengthMeter';
 
 const SignUp = () => {
@@ -37,7 +37,10 @@ const SignUp = () => {
     let enteredPhoneNumber = phoneNumberInputRef.current.value.toString();
 
     const enteredEmailValidity = checkValidity({ email: enteredEmail });
-    const enteredPasswordValidity = !isEmpty(enteredPassword);
+    const enteredPasswordValidity = checkValidity(
+      { password: enteredPassword },
+      { minLength: 7, maxLength: 20 }
+    );
     const enteredFirstNameValidity = checkValidity(enteredFirstName, {
       minLength: 3,
       maxLength: 20
@@ -60,7 +63,7 @@ const SignUp = () => {
       !enteredEmailValidity &&
       !enteredSurnameValidity &&
       !enteredEmailValidity &&
-      enteredPasswordValidity &&
+      !enteredPasswordValidity &&
       !enteredPhoneNumberValidity;
 
     if (!formIsValid) {
@@ -71,8 +74,6 @@ const SignUp = () => {
     enteredSurname = enteredSurname.trim();
     enteredFirstName = enteredFirstName.trim();
     enteredPhoneNumber = enteredPhoneNumber.trim();
-
-    console.log(enteredEmail);
 
     const data = {
       enteredFirstName,
@@ -141,9 +142,9 @@ const SignUp = () => {
             onChange={e => setPassword(e.target.value)}
           />
           <PasswordStrengthMeter password={password} />
-          {!formInputsValidity.password && (
+          {formInputsValidity.password && (
             <div className={classes.error}>
-              <div className={classes.left}>Please enter a valid password!</div>
+              <div className={classes.left}>Password {formInputsValidity.password}</div>
             </div>
           )}
         </div>

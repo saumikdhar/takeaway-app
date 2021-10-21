@@ -1,6 +1,15 @@
+import zxcvbn from 'zxcvbn';
+
 export const isEmpty = value => {
   if (value.trim() === '') {
     return true;
+  }
+  return false;
+};
+
+export const validatePassword = value => {
+  if (zxcvbn(value.password).score <= 1) {
+    return 'is not strong enough!';
   }
   return false;
 };
@@ -17,6 +26,10 @@ export const validateEmail = value => {
 export const checkValidity = (value, rules) => {
   if (value.email) {
     return validateEmail(value);
+  }
+
+  if (value.password) {
+    return validatePassword(value);
   }
 
   if (isEmpty(value)) {
