@@ -43,12 +43,18 @@ const SignUp = () => {
     );
     const enteredFirstNameValidity = checkValidity(enteredFirstName, {
       minLength: 3,
-      maxLength: 20
+      maxLength: 20,
+      validateName: true
     });
-    const enteredSurnameValidity = checkValidity(enteredSurname, { minLength: 3, maxLength: 20 });
+    const enteredSurnameValidity = checkValidity(enteredSurname, {
+      minLength: 3,
+      maxLength: 20,
+      validateName: true
+    });
     const enteredPhoneNumberValidity = checkValidity(enteredPhoneNumber, {
-      minLength: 11,
-      maxLength: 11
+      minLength: 10,
+      maxLength: 10,
+      validatePhone: true
     });
 
     setFormInputsValidity({
@@ -116,10 +122,18 @@ const SignUp = () => {
         </div>
         <div className={classes.control}>
           <label htmlFor="phoneNumber">Your phone number</label>
-          <input type="number" id="phoneNumber" required ref={phoneNumberInputRef} />
+          <div className={classes.country}>
+            {/* <select name="country" id="country">
+              <option value="+44" required>
+                +44
+              </option>
+            </select> */}
+            <label className={classes.country}>+44</label>
+            <input type="tel" id="phoneNumber" required ref={phoneNumberInputRef} />
+          </div>
           {formInputsValidity.phoneNumber && (
             <div className={classes.error}>
-              <div className={classes.left}>Phone number needs to have 11 digits!</div>
+              <div className={classes.left}>Phone number {formInputsValidity.phoneNumber}</div>
             </div>
           )}
         </div>
