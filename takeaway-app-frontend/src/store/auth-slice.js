@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { baseUrl } from '../shared/utility';
 
 export const userAuth = createAsyncThunk('auth/login', async (enteredData, thunkAPI) => {
   const { enteredEmail: email, enteredPassword: password, isChecked: rememberMe } = enteredData;
@@ -9,7 +10,7 @@ export const userAuth = createAsyncThunk('auth/login', async (enteredData, thunk
   }
 
   try {
-    const response = await fetch('http://localhost:8080/auth/login', {
+    const response = await fetch(`${baseUrl}/auth/login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -54,7 +55,7 @@ export const userSignUp = createAsyncThunk('user/signUp', async (enteredData, th
   } = enteredData;
 
   try {
-    const response = await fetch('http://localhost:8080/auth/signup', {
+    const response = await fetch(`${baseUrl}/auth/signup`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json'
@@ -105,7 +106,7 @@ export const checkAuthState = createAsyncThunk('auth/getUserDetails', async (_, 
   }
 
   try {
-    const response = await fetch('http://localhost:8080/auth/userDetails', {
+    const response = await fetch(`${baseUrl}/auth/userDetails`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

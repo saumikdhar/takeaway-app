@@ -20,7 +20,7 @@ const userSchema = new Schema({
   },
   status: {
     type: String,
-    default: 'Not Verified'
+    default: 'Active'
   },
   phoneNumber: {
     type: String,
@@ -31,7 +31,11 @@ const userSchema = new Schema({
       type: Schema.Types.ObjectId,
       ref: 'Order'
     }
-  ]
+  ],
+  confirmed: {
+    type: Boolean,
+    default: 'false'
+  }
 });
 
 module.exports = mongoose.model('User', userSchema);
