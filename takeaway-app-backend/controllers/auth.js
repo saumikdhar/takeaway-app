@@ -1,3 +1,6 @@
+const msgs = require('../services/email/msgs');
+const templates = require('../services/email/template');
+const sendEmail = require('../services/email/send');
 const { validationResult } = require('express-validator');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
@@ -5,15 +8,11 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 
 exports.signup = async (req, res, next) => {
-  const email = req.body.email;
-  const firstName = req.body.firstName;
-  const surname = req.body.surname;
-  const password = req.body.password;
-  const phoneNumber = req.body.phoneNumber;
+  const { email, firstName, surname, password, phoneNumber } = req.body;
 
   const errors = validationResult(req);
 
-  console.log(errors.errors[0].msg);
+  console.log(errors.errors[0]);
 
   if (!errors.isEmpty()) {
     console.log(email, password, firstName, surname);
@@ -63,6 +62,7 @@ exports.signup = async (req, res, next) => {
         'p820+e23sMORL+Vt/5CgxnEw1fXKWAUj37tgDAfFwFRD9/j28vHY',
       { expiresIn: '1h' }
     );
+    sendEmail(email, templates.confirm(result._id, firstName));
     res.status(201).json({ token: token, message: 'User created!', userId: result._id, email });
   } catch (err) {
     if (!err.statusCode) {
@@ -73,9 +73,7 @@ exports.signup = async (req, res, next) => {
 };
 
 exports.login = async (req, res, next) => {
-  const email = req.body.email;
-  const password = req.body.password;
-  const rememberMe = req.body.rememberMe;
+  const { email, password, rememberMe } = req.body;
 
   let expiry = '1h';
 
@@ -96,6 +94,13 @@ exports.login = async (req, res, next) => {
       res.status(403).json({ message: error });
       throw error;
     }
+
+    if (!user.confirmed) {
+      const error = 'Please verify email address to continue';
+      res.status(403).json({ message: error });
+      throw error;
+    }
+
     const token = jwt.sign(
       {
         email: user.email,

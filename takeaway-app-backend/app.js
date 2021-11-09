@@ -16,6 +16,8 @@ app.use((req, res, next) => {
   next();
 });
 
+app.use(express.static(__dirname + '/public'));
+
 app.use('/auth', authRoutes);
 app.use('/email', mailRoutes);
 app.listen(8080);
