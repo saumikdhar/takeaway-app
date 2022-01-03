@@ -39,7 +39,6 @@
 @keyframes about-img-animation {
   100% {
     transform: translate(0);
-    margin: auto;
   }
 }
 
@@ -54,7 +53,6 @@
 @keyframes about-text-animation {
   100% {
     transform: translate(0);
-    margin: auto;
   }
 }
 
@@ -75,7 +73,6 @@
   @keyframes about-text-animation {
     100% {
       transform: translate(0);
-      margin: auto;
     }
   }
 }

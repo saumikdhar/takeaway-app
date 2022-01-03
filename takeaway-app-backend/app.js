@@ -3,11 +3,14 @@ const mongoose = require('mongoose');
 
 const authRoutes = require('./routes/auth');
 const mailRoutes = require('./routes/mail');
+const templates = require('./services/email/template');
+const sendEmail = require('./services/email/send');
 
 const app = express();
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(express.static(__dirname + '/public'));
 
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', process.env.FRONT_END_URL);
@@ -15,8 +18,6 @@ app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   next();
 });
-
-app.use(express.static(__dirname + '/public'));
 
 app.use('/auth', authRoutes);
 app.use('/email', mailRoutes);
@@ -30,6 +31,7 @@ app.use((error, req, res, next) => {
   res.status(status).json({ message: message, data: data });
 });
 
+// sendEmail("saumikdhar@yahoo.co.uk", "Account Verification",templates.confirm("001101", "skjhdkj"));
 mongoose
   .connect(
     'mongodb+srv://saumik:call1066@cluster0.s9wzc.mongodb.net/myFirstDatabase?retryWrites=true&w=majority',

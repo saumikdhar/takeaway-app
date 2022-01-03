@@ -8,17 +8,21 @@ module.exports = {
   confirm: (id, firstName) => ({
     subject: 'Exotic Shaad Email Verification',
     html: `
-      <link rel='stylesheet' type='text/css' href='css/template.css' />
       <h2> Hey ${firstName}, </h2>
       <p>Thank you for deciding to create an account with Exotic Shaad! You're one step closer to ordering and 
       accessing a range of what we have to offer</p>
       <p> Before we get started, We'll need to verify your email. Click on the      
-      <a href='${process.env.FRONT_END_URL}/confirm/${id}'>
+      <a href='http://${process.env.FRONT_END_URL}/account/verify/${id}'>
         link
       </a> to verify your email address </p>
-    <div class='red'>this is red</div>
+      <br/>
+      <p>If you didn't request this please ignore this email.</p>
+      <br/>
+      <p>Thanks</p>
+      <br/>
+      <p>Exotic Shaad</p>
     
     `,
-    text: `Copy and paste this link: ${process.env.FRONT_END_URL}/confirm/${id}`
+    text: `Copy and paste this link: ${process.env.FRONT_END_URL}/verify/${id}`
   })
 };

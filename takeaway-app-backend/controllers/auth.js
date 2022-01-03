@@ -62,7 +62,7 @@ exports.signup = async (req, res, next) => {
         'p820+e23sMORL+Vt/5CgxnEw1fXKWAUj37tgDAfFwFRD9/j28vHY',
       { expiresIn: '1h' }
     );
-    sendEmail(email, templates.confirm(result._id, firstName));
+    sendEmail(email,templates.confirm(result._id, firstName));
     res.status(201).json({ token: token, message: 'User created!', userId: result._id, email });
   } catch (err) {
     if (!err.statusCode) {

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width; initial-scale=1.0;">
+    <link rel="stylesheet" href="./css/verification.css">
+    <title>Verification</title>
+
+<style>
+
+.header {
+  color: white;
+  margin: 0 auto;
+  max-width: 1272px;
+  min-height: 40px;
+  position: relative;
+  width: 100%;
+  display: flex;
+  background-color: #c9ffb3;
+}
+
+
+  .verify-button{
+    text-align: center;
+    padding: 18px;
+    font-weight: 400;
+    color: white;
+    background-color: rgb(114, 137, 218);
+    border-radius: 12px;
+    font-size: 16px;
+    border: 1px solid rgb(114, 137, 218);
+  }
+
+  .activate-account{
+    text-align: center;
+  }
+
+.main-image {
+  width: 100%;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.img{
+  height: 40px;
+}
+
+@media only screen and (max-width: 600px) {
+  .verification{
+    margin-left: 100px;
+    margin-right: 100px;
+  }
+}
+</style>
+</head>
+<body>
+  <div section="verification">
+    <div section="Toolbar">
+      <div class="header">
+        <div class="main-image">
+          <img src="cid:exotic-shaad-logo" alt="Image of exotic shaad logo">
+        </div>
+      </div>
+    </div>
+   <h2> Hey {{content.firstName}}, </h2>
+      <p>Thank you for deciding to create an account with Exotic Shaad! You're one step closer to ordering and 
+      accessing a range of what we have to offer</p>
+      <p> Before we get started, We'll need to verify your email. Click on the button below to activate your account.
+        <br/>
+        <br/>
+      <div class="activate-account">       
+      <button class="verify-button">Verify Email</button>
+    </div>
+    </div>
+</body>
+</html>

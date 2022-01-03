@@ -1,14 +1,12 @@
 require('dotenv').config();
-
 const nodemailer = require('nodemailer');
+const hbs = require('nodemailer-express-handlebars');
 
-// The credentials for the email account you want to send mail from.
 const credentials = {
   host: 'smtp.gmail.com',
   port: 465,
   secure: true,
   auth: {
-    // These environment variables will be pulled from the .env file
     user: process.env.MAIL_USER,
     pass: process.env.MAIL_PASS
   }
@@ -18,6 +16,10 @@ const credentials = {
 // function is called.
 const transporter = nodemailer.createTransport(credentials);
 
+// transporter.use('compile', hbs({viewEngine: {
+//   defaultLayout: false,
+// }, 
+// viewPath: './views/'}));
 // exporting an 'async' function here allows 'await' to be used
 // as the return value of this function.
 module.exports = async (to, content) => {
@@ -29,7 +31,22 @@ module.exports = async (to, content) => {
 
   // Combining the content and contacts into a single object that can
   // be passed to Nodemailer.
+
   const email = Object.assign({}, content, contacts);
+  //  const email  =   {
+  //   from: process.env.MAIL_USER,
+  //   to,
+  //   subject,
+  //   template: templateName,
+  //   context: {
+  //       content
+  //   },
+  //   attachments: [{
+  //     filename: 'exotic-shaad-logo.png',
+  //     path: __dirname + '../../../public/images/exotic-shaad-logo.png',
+  //     cid: 'exotic-shaad-logo'
+  //   }]
+  // } 
 
   // This file is imported into the controller as 'sendEmail'. Because
   // 'transporter.sendMail()' below returns a promise we can write code like this
