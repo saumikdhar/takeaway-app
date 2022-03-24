@@ -12,8 +12,9 @@ import TC from './components/Terms/TermsAndConditions';
 import PrivacyPolicy from './components/Terms/PrivacyPolicy';
 import Logout from './components/Authentication/Logout/Logout';
 import Verification from './components/Verification/Verification';
+import VerificationConfirmation from './components/Verification/VerificationConfirmation';
 
-const App = (props) => {
+const App = props => {
   const dispatch = useDispatch();
   const { isLoggedIn } = useSelector(authSelector);
   const token = localStorage.getItem('token');
@@ -31,9 +32,9 @@ const App = (props) => {
       <Route path="/info/terms-and-conditions" component={TC} />
       <Route path="/info/privacy-policy" component={PrivacyPolicy} />
       <Route exact path="/account/verify/:id" component={Verification} />
-      <Route path="/account/verify/confirmation" component={Verification} />
+      <Route path="/account/verify/confirmation" component={VerificationConfirmation} />
       <Route path="/account/verify/error" component={Verification} />
-      
+
       <Route path="/home" component={Home} />
       <Redirect to="/home" />
     </Switch>
@@ -49,10 +50,14 @@ const App = (props) => {
     );
   }
 
-
-  if (props.location.pathname.split("/")[2] === "verify"){
-    return (<>{routes}<Footer/></>);
-  };
+  if (props.location.pathname.split('/')[2] === 'verify') {
+    return (
+      <>
+        {routes}
+        <Footer />
+      </>
+    );
+  }
 
   return (
     <div>
