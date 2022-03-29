@@ -1,7 +1,6 @@
 import classes from './SignUp.module.css';
 import { useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
-
+import { Link, useHistory } from 'react-router-dom';
 import Button from '../UI/Button/Button';
 import Loader from '../UI/Loader/Loader';
 import { useDispatch, useSelector } from 'react-redux';
@@ -17,8 +16,9 @@ const SignUp = () => {
   const surnameInputRef = useRef();
   const phoneNumberInputRef = useRef();
   const [password, setPassword] = useState('');
+  const history = useHistory();
 
-  const { isFetching, errorMessage } = useSelector(authSelector);
+  const { isFetching, errorMessage, message } = useSelector(authSelector);
   const [formInputsValidity, setFormInputsValidity] = useState({
     firstName: false,
     surname: false,
@@ -94,6 +94,10 @@ const SignUp = () => {
   const clearErrorHandler = () => {
     dispatch(authActions.clearState());
   };
+
+  if (message === 'User created!') {
+    history.push('/account/success');
+  }
 
   return (
     <section className={classes.authentication}>

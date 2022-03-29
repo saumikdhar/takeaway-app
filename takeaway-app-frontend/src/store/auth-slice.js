@@ -77,10 +77,6 @@ export const userSignUp = createAsyncThunk('user/signUp', async (enteredData, th
       console.log(data);
       return thunkAPI.rejectWithValue(data || 'An error occurred');
     }
-    localStorage.setItem('token', data.token);
-    const remainingMilliseconds = 60 * 60 * 1000;
-    const expiryDate = new Date(new Date().getTime() + remainingMilliseconds);
-    localStorage.setItem('expiryDate', expiryDate.toISOString());
     return data;
   } catch (e) {
     console.log('Error', e.response.data);
@@ -142,12 +138,19 @@ const authSlice = createSlice({
     role: '',
     isLoggedIn: false,
     isFetching: false,
-    errorMessage: ''
+    errorMessage: '',
+    message: ''
   },
 
   reducers: {
     clearState(state) {
+      state.userId = '';
+      state.role = '';
       state.errorMessage = '';
+      state.email = '';
+      state.isLoggedIn = false;
+      state.username = '';
+      state.message = '';
     },
     logout(state, action) {
       console.log(state);
@@ -157,6 +160,7 @@ const authSlice = createSlice({
       state.email = '';
       state.isLoggedIn = false;
       state.username = '';
+      state.message = '';
       localStorage.removeItem('token');
       localStorage.removeItem('expirationDate');
     },
@@ -207,7 +211,8 @@ const authSlice = createSlice({
       state.isFetching = false;
       state.email = payload.email;
       state.userId = payload.userId;
-      state.isLoggedIn = true;
+      state.isLoggedIn = false;
+      state.message = payload.message;
     },
     [userSignUp.pending]: state => {
       state.isFetching = true;

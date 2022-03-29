@@ -13,7 +13,7 @@ const Verification = props => {
     }
 
     if (token) {
-      sendRequest({ url: `${baseUrl}/email/check-verification/${token}`, method: 'POST' });
+      sendRequest({ url: `${baseUrl}/email/email-verification/${token}`, method: 'POST' });
     }
   }, [sendRequest, token]);
 

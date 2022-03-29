@@ -5,7 +5,7 @@ exports.sendEmail = async (req, res, next) => {
   console.log('send email function');
 };
 
-exports.checkVerification = async (req, res, next) => {
+exports.confirmEmail = async (req, res, next) => {
   const token = req.params.id.substring(1);
 
   try {

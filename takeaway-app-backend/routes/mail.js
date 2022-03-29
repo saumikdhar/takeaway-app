@@ -7,7 +7,7 @@ const isAuth = require('../middleware/is-auth');
 const router = express.Router();
 
 router.post('/send', mailController.sendEmail);
-router.post('/check-verification/:id', mailController.checkVerification);
+router.post('/email-verification/:id', mailController.confirmEmail);
 router.post('/confirm', mailController.confirm);
 
 module.exports = router;

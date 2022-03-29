@@ -13,6 +13,7 @@ import PrivacyPolicy from './components/Terms/PrivacyPolicy';
 import Logout from './components/Authentication/Logout/Logout';
 import Verification from './components/Verification/Verification';
 import VerificationConfirmation from './components/Verification/VerificationConfirmation';
+import SignUpSuccess from './components/Authentication/SignUpSuccess';
 
 const App = props => {
   const dispatch = useDispatch();
@@ -34,6 +35,7 @@ const App = props => {
       <Route exact path="/account/verify/:id" component={Verification} />
       <Route path="/account/verify/confirmation" component={VerificationConfirmation} />
       <Route path="/account/verify/error" component={Verification} />
+      <Route path="/account/success" component={SignUpSuccess} />
 
       <Route path="/home" component={Home} />
       <Redirect to="/home" />
@@ -50,9 +52,13 @@ const App = props => {
     );
   }
 
-  if (props.location.pathname.split('/')[2] === 'verify') {
+  if (
+    props.location.pathname.split('/')[2] === 'verify' ||
+    props.location.pathname.split('/')[2] === 'success'
+  ) {
     return (
       <>
+        <Toolbar />
         {routes}
         <Footer />
       </>
