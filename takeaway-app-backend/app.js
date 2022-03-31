@@ -20,7 +20,7 @@ app.use((req, res, next) => {
 });
 
 app.use('/auth', authRoutes);
-app.use('/email', mailRoutes);
+app.use('/account', mailRoutes);
 app.listen(8080);
 
 app.use((error, req, res, next) => {

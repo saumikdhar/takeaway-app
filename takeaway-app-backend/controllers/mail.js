@@ -1,23 +1,30 @@
 const User = require('../models/user');
 const msgs = require('../services/email/msgs');
+const Token = require('../models/token');
 
 exports.sendEmail = async (req, res, next) => {
   console.log('send email function');
 };
 
 exports.confirmEmail = async (req, res, next) => {
-  const token = req.params.id.substring(1);
-
   try {
-    const user = await User.findById(token);
+    const token = await Token.findOne({ token: req.params.token });
+
+    if (!token) {
+      const error = msgs.linkNotFound;
+      res.status(400).json({ error });
+      throw error;
+    }
+    const user = await User.findOne({ _id: token._userId });
+
     if (!user) {
-      const error = 'Invalid link';
-      res.status(404).json({ message: error });
+      const error = 'We were unable to find a user for this verification. Please Sign Up!';
+      res.status(401).json({ message: error });
       throw error;
     }
 
     if (user.confirmed) {
-      res.status(409).json({ message: msgs.alreadyConfirmed });
+      res.status(200).json({ message: msgs.alreadyConfirmed });
       throw error;
     }
 

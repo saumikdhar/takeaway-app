@@ -12,7 +12,7 @@ module.exports = {
       <p>Thank you for deciding to create an account with Exotic Shaad! You're one step closer to ordering and 
       accessing a range of what we have to offer</p>
       <p> Before we get started, We'll need to verify your email. Click on the      
-      <a href='http://${process.env.FRONT_END_URL}/account/verify/${id}'>
+      <a href="${process.env.FRONT_END_URL}/account/verify/${id}">
         link
       </a> to verify your email address </p>
       <br/>

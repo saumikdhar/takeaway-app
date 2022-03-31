@@ -12,7 +12,6 @@ import TC from './components/Terms/TermsAndConditions';
 import PrivacyPolicy from './components/Terms/PrivacyPolicy';
 import Logout from './components/Authentication/Logout/Logout';
 import Verification from './components/Verification/Verification';
-import VerificationConfirmation from './components/Verification/VerificationConfirmation';
 import SignUpSuccess from './components/Authentication/SignUpSuccess';
 
 const App = props => {
@@ -32,8 +31,7 @@ const App = props => {
       <Route path="/account/register" component={SignUp} />
       <Route path="/info/terms-and-conditions" component={TC} />
       <Route path="/info/privacy-policy" component={PrivacyPolicy} />
-      <Route exact path="/account/verify/:id" component={Verification} />
-      <Route path="/account/verify/confirmation" component={VerificationConfirmation} />
+      <Route exact path="/account/verify/:token" component={Verification} />
       <Route path="/account/verify/error" component={Verification} />
       <Route path="/account/success" component={SignUpSuccess} />
 

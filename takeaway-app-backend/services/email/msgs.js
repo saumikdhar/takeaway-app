@@ -1,7 +1,9 @@
 module.exports = {
   confirm: 'Email sent, please check your inbox to confirm',
-  confirmed: 'Your email is confirmed!',
+  confirmed: 'Your account has been successfully verified',
   resend: 'Confirmation email resent, maybe check your spam?',
   couldNotFind: 'Could not find you!',
-  alreadyConfirmed: 'Your email was already confirmed'
+  alreadyConfirmed: 'Your email was already confirmed',
+  linkNotFound:
+    'Your verification link is Invalid or may have expired. Please click on resend for verify your Email.'
 };

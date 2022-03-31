@@ -144,12 +144,8 @@ const authSlice = createSlice({
 
   reducers: {
     clearState(state) {
-      state.userId = '';
-      state.role = '';
       state.errorMessage = '';
-      state.email = '';
       state.isLoggedIn = false;
-      state.username = '';
       state.message = '';
     },
     logout(state, action) {
