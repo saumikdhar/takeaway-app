@@ -19,6 +19,7 @@ const useHttp = () => {
       setData(data);
 
       if (!response.ok) {
+        setData('');
         throw new Error(data.error);
       }
     } catch (err) {

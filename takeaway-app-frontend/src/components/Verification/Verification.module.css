@@ -2,4 +2,48 @@
   vertical-align: middle;
   padding: 8rem;
   text-align: center;
+  margin: auto;
+  max-width: 50rem;
+}
+
+.card {
+  margin-top: 5rem;
+  margin-bottom: 5rem;
+}
+.title {
+  font-size: 2.8rem;
+  margin-bottom: 2.5rem;
+  color: #363636;
+  font-weight: 700 !important;
+}
+.actions {
+  margin-top: 1.5rem;
+  /* display: flex; */
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 5rem;
+  margin-top: 5rem;
+}
+
+.actions .button button {
+  cursor: pointer;
+  font: inherit;
+  color: white;
+  background-color: #3273dc;
+  border: transparent;
+  border-radius: 8rem;
+  padding: calc(0.34435vw + 13.38843px) calc(0.34435vw + 18.38843px);
+  margin-bottom: 1rem;
+  font-family: Helvetica, sans-serif;
+  font-weight: 700;
+  font-size: 1.25rem;
+  max-width: 15rem;
+}
+
+.actions .button button:hover {
+  background-color: #4d85df;
+}
+
+p {
+  font-size: 1.55rem;
 }
