@@ -15,6 +15,18 @@ exports.confirmEmail = async (req, res, next) => {
       res.status(400).json({ error });
       throw error;
     }
+
+    if (token) {
+      // console.log(token);
+      const currentDate = new Date();
+      const error = msgs.linkNotFound;
+      // console.log(currentDate);
+      if (currentDate > token.expireAt) {
+        console.log('token expired');
+        return res.status(400).json({ error });
+      }
+    }
+
     const user = await User.findOne({ _id: token._userId });
 
     if (!user) {
@@ -25,7 +37,6 @@ exports.confirmEmail = async (req, res, next) => {
 
     if (user.confirmed) {
       res.status(200).json({ message: msgs.alreadyConfirmed });
-      throw error;
     }
 
     user.confirmed = true;
