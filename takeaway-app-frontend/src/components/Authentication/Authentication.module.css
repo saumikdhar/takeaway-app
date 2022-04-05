@@ -1,0 +1,121 @@
+.authentication {
+  margin: 3rem auto;
+  width: 100%;
+  max-width: 25rem;
+  border-radius: 12px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+  padding: 1rem;
+  text-align: center;
+  color: black;
+  margin-bottom: 10rem;
+  background-color: white;
+}
+
+.authentication h1 {
+  text-align: center;
+  /* color: white; */
+}
+
+.control {
+  margin-bottom: 1rem;
+}
+
+.control label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 0.2rem;
+  text-align: left;
+  color: #535353;
+}
+
+.control input {
+  font: inherit;
+  color: #38015c;
+  border-radius: 12px;
+  border: 1px solid rgb(190, 189, 189);
+  width: 100%;
+  text-align: left;
+  padding: 12px 10px;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.actions {
+  margin-top: 1.5rem;
+  /* display: flex; */
+  flex-direction: column;
+  align-items: center;
+}
+
+.actions .button button {
+  cursor: pointer;
+  font: inherit;
+  color: white;
+  background-color: rgb(10, 128, 32);
+  border: 1px solid rgb(10, 128, 32);
+  /* border-radius: 4px; */
+  padding: calc(0.34435vw + 13.38843px) calc(0.34435vw + 18.38843px);
+  margin-bottom: 1rem;
+  font-family: Helvetica, sans-serif;
+  font-weight: 700;
+}
+
+.actions .button button:hover {
+  background-color: rgb(8, 94, 23);
+  border-color: rgb(8, 94, 23);
+}
+
+.actions .toggle {
+  margin-top: 1rem;
+  background-color: transparent;
+  color: #5212ca;
+  border: none;
+  padding: 0.15rem 1.5rem;
+  font-size: 1.15rem;
+}
+
+.actions .toggle:hover {
+  background-color: transparent;
+  color: #0a2396;
+}
+
+.row {
+  overflow: hidden;
+  margin-bottom: 0;
+}
+
+.rememberMe {
+  float: left;
+}
+
+.forgottenPassword {
+  width: 48%;
+  float: right;
+  text-align: right;
+}
+
+.o-link {
+  color: #125fca;
+  text-decoration: underline;
+  background-color: transparent;
+  color: #5212ca;
+  border: none;
+  /* padding: 0.15rem 1.5rem; */
+  font-size: 0.94rem;
+}
+
+.or {
+  margin: 3rem;
+}
+
+.error {
+  color: red;
+  font-weight: 500;
+  text-align: left;
+}
+
+@media (max-width: 505px) {
+  .authentication {
+    max-width: 30rem;
+  }
+}

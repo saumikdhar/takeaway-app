@@ -1,0 +1,50 @@
+.cardContainer {
+  margin-top: -110px;
+  padding-bottom: 10px;
+  margin-bottom: 30px;
+}
+
+.card2 {
+  z-index: 300;
+}
+
+.card3 {
+  z-index: 400;
+  position: relative;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.uppercase {
+  font-size: 1.28rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  padding-bottom: 0.843rem;
+}
+
+.button {
+  margin-top: 40px;
+  text-align: center;
+}
+
+button {
+  padding: 1rem;
+  background-color: rgb(10, 128, 32);
+  border-radius: 5px;
+  color: white;
+  font-weight: 600;
+  font-size: 18px;
+  width: -webkit-fill-available;
+}
+
+@media (min-width: 960px) {
+  .card2 {
+    min-width: 500px;
+  }
+}
+
+@media (min-width: 550px) {
+  .card3 {
+    width: 500px;
+  }
+}

@@ -1,0 +1,78 @@
+#popular-dishes-container {
+  background-color: white;
+  padding: 5rem 0 10rem 0;
+}
+
+.dish-container {
+  display: flex;
+  justify-content: space-between;
+  margin: auto;
+  max-width: 1200px;
+  text-align: center;
+  /* background-color: #ffead4; */
+  padding: 2rem;
+}
+
+.dish-image {
+  width: 100%;
+  display: block;
+  max-width: 100%;
+  height: auto;
+  border-style: solid;
+}
+
+.deal {
+  width: 100%;
+  max-width: 20rem;
+  line-height: 100px;
+  margin-right: 20px;
+  vertical-align: middle;
+  text-transform: capitalize;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 55%);
+  background-color: white;
+  border-radius: 0.5rem;
+}
+
+.typography-2 {
+  font-size: 2.5rem;
+  line-height: 1;
+  font-weight: 400;
+  text-transform: uppercase;
+  text-align: center;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  margin-left: 10px;
+  margin-right: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #555;
+}
+
+.typography-2::before,
+.typography-2::after {
+  border-width: 1px;
+  border-top: inset;
+  flex: 1 1 0%;
+  /* position: relative; */
+  content: '';
+  /* height: 1; */
+  /* top: -2px; */
+  margin-right: 10px;
+  margin-left: 10px;
+}
+
+@media (min-width: 768px) {
+  .dish-container {
+    padding-right: 10px;
+    padding-left: 10px;
+    justify-content: center;
+    display: flex;
+  }
+}
+
+@media (min-width: 960px) {
+  .dish-container {
+    max-width: 960px;
+  }
+}

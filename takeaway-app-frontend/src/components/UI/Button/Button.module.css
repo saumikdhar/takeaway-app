@@ -1,0 +1,27 @@
+.Button {
+  background-color: red;
+  text-align: center;
+  cursor: pointer;
+  display: inline-block;
+  font-size: 16px;
+  padding: 6px;
+  transition-duration: 0.4s;
+  font-weight: bold;
+  border-radius: 18px;
+  border: 0px;
+}
+
+.Button:hover {
+  background-color: #77bc1f;
+  color: white;
+}
+
+.Button:focus {
+  outline: none;
+}
+
+.Back {
+  padding-left: 15px;
+  padding-right: 15px;
+  float: left;
+}
