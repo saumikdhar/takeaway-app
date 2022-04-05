@@ -6,9 +6,6 @@ const templates = require('../services/email/template');
 const sendEmail = require('../services/email/send');
 
 exports.confirmEmail = async (req, res, next) => {
-  const test = new Date();
-  console.log(test);
-
   try {
     const token = await Token.findOne({ token: req.params.token });
 
@@ -16,16 +13,6 @@ exports.confirmEmail = async (req, res, next) => {
       const error = msgs.linkNotFound;
       res.status(400).json({ error });
       throw error;
-    }
-
-    if (token) {
-      const currentDate = new Date();
-      const error = msgs.linkNotFound;
-
-      if (currentDate > token.expireAt) {
-        console.log('token expired', token);
-        return res.status(400).json({ error });
-      }
     }
 
     const user = await User.findOne({ _id: token._userId });
@@ -38,6 +25,16 @@ exports.confirmEmail = async (req, res, next) => {
 
     if (user.confirmed) {
       res.status(200).json({ message: msgs.alreadyConfirmed });
+    }
+
+    if (token) {
+      const currentDate = new Date();
+      const error = msgs.linkNotFound;
+
+      if (currentDate > token.expireAt) {
+        console.log('token expired', token);
+        return res.status(400).json({ error });
+      }
     }
 
     user.confirmed = true;

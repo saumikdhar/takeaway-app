@@ -28,9 +28,6 @@ const Verification = props => {
       return history.push('/home');
     }
 
-    // if (token.length < 32 || token.length > 32) {
-    //   return history.push('/home');
-    // }
     if (token) {
       sendRequest({ url: `${baseUrl}/account/verification/${token}`, method: 'POST' });
     }
@@ -42,7 +39,7 @@ const Verification = props => {
         <>
           {fetchedData && (
             <div className={classes.card}>
-              <GreenTick /> <div className={classes.title}>Email Verified</div>
+              <GreenTick /> <div className={classes.title}>Email Verification</div>
               <p>{fetchedData.message} </p>
             </div>
           )}
