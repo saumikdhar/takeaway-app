@@ -1,7 +1,8 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const date = new Date();
 
-const tokenSchema = new mongoose.Schema({
+const tokenSchema = new Schema({
   _userId: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
@@ -13,10 +14,7 @@ const tokenSchema = new mongoose.Schema({
   },
   expireAt: {
     type: Date,
-    default: Date.now,
-    index: {
-      expires: 86400000
-    }
+    default: date.setDate(date.getDate() + 1)
   }
 });
 

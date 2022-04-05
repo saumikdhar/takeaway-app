@@ -5,5 +5,5 @@ module.exports = {
   couldNotFind: 'Could not find you!',
   alreadyConfirmed: 'Your email was already confirmed',
   linkNotFound:
-    'Your verification link is Invalid or may have expired. Please click on resend for verify your Email.'
+    'Your verification link is Invalid or may have expired. Please request a new link to verify your Email.'
 };
