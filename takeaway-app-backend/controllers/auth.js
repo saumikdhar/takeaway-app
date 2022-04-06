@@ -138,7 +138,7 @@ exports.getUserStatus = async (req, res, next) => {
 exports.updateUserStatus = async (req, res, next) => {
   const newStatus = req.body.status;
   try {
-    const user = await User.findById(req.userId);
+    const user = await User.findById(req.body.userId);
     if (!user) {
       const error = new Error('User not found.');
       error.statusCode = 404;
@@ -147,7 +147,7 @@ exports.updateUserStatus = async (req, res, next) => {
     }
     user.status = newStatus;
     await user.save();
-    res.status(200).json({ message: 'User updated.' });
+    res.status(200).json({ message: 'User status updated.' });
   } catch (err) {
     if (!err.statusCode) {
       err.statusCode = 500;
