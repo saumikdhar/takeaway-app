@@ -94,6 +94,63 @@ describe('Auth Controller', function () {
     });
   });
 
+  it('should send a 404 error reponse if user not found', function (done) {
+    const req = { body: { status: 'Inactive', userId: '5d1a00b76e0ac9ad2dc00fc1' } };
+
+    const res = {
+      statusCode: 404,
+      error: 'User not found.',
+      status: function (code) {
+        this.statusCode = code;
+        return this;
+      },
+      json: function (data) {
+        this.userStatus = data.status;
+      }
+    };
+
+    AuthController.updateUserStatus(req, res, () => {}).then(() => {
+      expect(res.statusCode).to.be.equal(404);
+      expect(res.error).to.be.equal('User not found.');
+      done();
+    });
+  });
+
+  it('should send a reponse of user creation when successfully created', function (done) {
+    const req = {
+      body: {
+        email: 'test@this.test.com',
+        firstName: 'test',
+        surname: 'ing',
+        password: 'password',
+        phoneNumber: '78756463644'
+      }
+    };
+
+    const res = {
+      statusCode: 201,
+      message: 'User created!',
+      email: 'test@this.test.com',
+      status: function (code) {
+        this.statusCode = code;
+        return this;
+      },
+      json: function (data) {
+        this.email = data.email;
+        this.message = data.message;
+      }
+    };
+
+    AuthController.signup(req, res, () => {}).then(() => {
+      expect(res.statusCode).to.be.equal(201);
+      expect(res.email).to.be.equal('test@this.test.com');
+      expect(res.message).to.be.equal('User created!');
+      done();
+    });
+  });
+
+  //   it ('should send an email when successfully creating a new account')
+
   after(function (done) {
     User.deleteMany({})
       .then(() => {

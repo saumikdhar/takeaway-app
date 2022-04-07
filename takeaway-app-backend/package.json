@@ -4,9 +4,10 @@
   "description": "A backend api for exotic shaad takeaway app",
   "main": "index.js",
   "scripts": {
-    "test": "mocha --timeout 5000",
+    "test": "mocha --timeout 5000", 
     "start": "node app.js",
-    "start:dev": "nodemon app.js"
+    "start:dev": "nodemon app.js",
+    "test-with-coverage": "nyc --reporter=text mocha --timeout 5000"
   },
   "author": "Saumik Dhar",
   "license": "MIT",
@@ -14,6 +15,7 @@
     "chai": "^4.3.6",
     "mocha": "^9.2.2",
     "nodemon": "^2.0.13",
+    "nyc": "^15.1.0",
     "prettier": "^2.3.2",
     "sinon": "^13.0.1"
   },
