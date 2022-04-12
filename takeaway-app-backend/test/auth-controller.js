@@ -57,7 +57,7 @@ describe('Auth Controller', function () {
     const req = { userId: '5d1a00b76e0ac9ad2dc00fc0' };
     const res = {
       statusCode: 500,
-      userStatus: null,
+      userStatus: 'Active',
       status: function (code) {
         this.statusCode = code;
         return this;
@@ -106,12 +106,13 @@ describe('Auth Controller', function () {
       },
       json: function (data) {
         this.userStatus = data.status;
+        this.error = data.error;
       }
     };
 
     AuthController.updateUserStatus(req, res, () => {}).then(() => {
       expect(res.statusCode).to.be.equal(404);
-      expect(res.error).to.be.equal('User not found.');
+      expect(res.error).to.be.an('error');
       done();
     });
   });
@@ -128,7 +129,7 @@ describe('Auth Controller', function () {
     };
 
     const res = {
-      statusCode: 201,
+      statusCode: 500,
       message: 'User created!',
       email: 'test@this.test.com',
       status: function (code) {
@@ -138,6 +139,7 @@ describe('Auth Controller', function () {
       json: function (data) {
         this.email = data.email;
         this.message = data.message;
+        this.userId = data.userId;
       }
     };
 
@@ -149,7 +151,35 @@ describe('Auth Controller', function () {
     });
   });
 
-  //   it ('should send an email when successfully creating a new account')
+  it('should throw a validation error if any input fields were parsed empty', function (done) {
+    const req = {
+      body: {
+        email: '',
+        firstName: 'test',
+        surname: 'ing',
+        password: 'password',
+        phoneNumber: '78756463644'
+      }
+    };
+
+    const res = {
+      statusCode: 422,
+      message: "email can't be empty",
+      status: function (code) {
+        this.statusCode = code;
+        return this;
+      },
+      json: function (data) {
+        this.message = data.message;
+      }
+    };
+
+    AuthController.signup(req, res, () => {}).then(() => {
+      expect(res.statusCode).to.be.equal(422);
+      expect(res.message).to.be.equal("email can't be empty");
+      done();
+    });
+  });
 
   after(function (done) {
     User.deleteMany({})
