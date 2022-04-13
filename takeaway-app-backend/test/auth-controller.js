@@ -3,6 +3,7 @@ const sinon = require('sinon');
 const mongoose = require('mongoose');
 
 const User = require('../models/user');
+const Token = require('../models/token');
 const AuthController = require('../controllers/auth');
 
 describe('Auth Controller', function () {
@@ -180,6 +181,96 @@ describe('Auth Controller', function () {
       done();
     });
   });
+
+  it('should fail to login if account is unverified', function (done) {
+    const req = {
+      body: {
+        email: 'test@this.test.com',
+        password: 'password',
+        rememberMe: true
+      }
+    };
+
+    const res = {
+      statusCode: 500,
+      email: 'test2@test.com',
+      message: '',
+      status: function (code) {
+        this.statusCode = code;
+        return this;
+      },
+      json: function (data) {
+        this.email = data.email;
+        this.message = data.message;
+      }
+    };
+
+    AuthController.login(req, res, () => {}).then(() => {
+      expect(res.statusCode).to.be.equal(401);
+      expect(res.message).to.be.equal('Please verify email address to continue');
+      done();
+    });
+  });
+
+  it("should fail to login if password doesn't match", function (done) {
+    const req = {
+      body: {
+        email: 'test@this.test.com',
+        password: 'wrongpassword',
+        rememberMe: true
+      }
+    };
+
+    const res = {
+      statusCode: 500,
+      email: 'test2@test.com',
+      message: '',
+      status: function (code) {
+        this.statusCode = code;
+        return this;
+      },
+      json: function (data) {
+        this.email = data.email;
+        this.message = data.message;
+      }
+    };
+
+    AuthController.login(req, res, () => {}).then(() => {
+      expect(res.statusCode).to.be.equal(403);
+      expect(res.message).to.be.equal('Email address or password is incorrect');
+      done();
+    });
+  });
+
+  //   it('should be able to log in a verified user with valid credentials', function (done) {
+  //     const req = {
+  //       body: {
+  //         email: 'test@this.test.com',
+  //         password: 'password',
+  //         rememberMe: false
+  //       }
+  //     };
+
+  //     const res = {
+  //       statusCode: 500,
+  //       message: '',
+  //       status: function (code) {
+  //         this.statusCode = code;
+  //         return this;
+  //       },
+  //       json: function (data) {
+  //         this.email = data.email;
+  //         this.message = data.message;
+  //       }
+  //     };
+
+  //     AuthController.login()
+
+  //     AuthController.login(req, res, () => {}).then(() => {
+  //       expect(res.statusCode).to.be.equal(200);
+  //       done();
+  //     });
+  //   });
 
   after(function (done) {
     User.deleteMany({})

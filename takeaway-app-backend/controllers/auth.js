@@ -62,6 +62,7 @@ exports.login = async (req, res, next) => {
       res.status(404).json({ message: error });
       throw error;
     }
+
     const isEqual = await bcrypt.compare(password, user.password);
     if (!isEqual) {
       const error = 'Email address or password is incorrect';
@@ -69,6 +70,7 @@ exports.login = async (req, res, next) => {
       throw error;
     }
 
+    console.log(user);
     if (!user.confirmed) {
       const error = 'Please verify email address to continue';
       res.status(401).json({ message: error });
