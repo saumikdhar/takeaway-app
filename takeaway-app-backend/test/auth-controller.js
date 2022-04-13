@@ -305,6 +305,57 @@ describe('Auth Controller', function () {
     });
   });
 
+  it('should throw an error user details not found', function (done) {
+    const req = {
+      userEmail: 'invalid@email.com'
+    };
+
+    const res = {
+      statusCode: 200,
+      message: '',
+      status: function (code) {
+        this.statusCode = code;
+        return this;
+      },
+      json: function (data) {
+        this.message = data.message;
+      }
+    };
+
+    AuthController.userDetails(req, res, () => {}).then(() => {
+      expect(res.message).to.be.equal('User not found!');
+      expect(res.statusCode).to.be.equal(404);
+      done();
+    });
+  });
+
+  it('should send a 200 response if user is found', function (done) {
+    const req = {
+      userEmail: 'test2@test.com'
+    };
+
+    const res = {
+      statusCode: 500,
+      userEmail: '',
+      userId: '',
+      status: function (code) {
+        this.statusCode = code;
+        return this;
+      },
+      json: function (data) {
+        this.userEmail = data.userEmail;
+        this.userId = data.userId;
+      }
+    };
+
+    AuthController.userDetails(req, res, () => {}).then(() => {
+      expect(res.userEmail).to.be.equal('test2@test.com');
+      expect(res.userId).to.be.equal('5d1a00b76e0ac9ad2dc00fc0');
+      expect(res.statusCode).to.be.equal(200);
+      done();
+    });
+  });
+
   after(function (done) {
     User.deleteMany({})
       .then(() => {
