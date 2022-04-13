@@ -70,7 +70,6 @@ exports.login = async (req, res, next) => {
       throw error;
     }
 
-    console.log(user);
     if (!user.confirmed) {
       const error = 'Please verify email address to continue';
       res.status(401).json({ message: error });

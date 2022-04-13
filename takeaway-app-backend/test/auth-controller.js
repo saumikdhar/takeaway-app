@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 const User = require('../models/user');
 const Token = require('../models/token');
 const AuthController = require('../controllers/auth');
+const AccountController = require('../controllers/account');
 
 describe('Auth Controller', function () {
   before(function (done) {
@@ -23,6 +24,13 @@ describe('Auth Controller', function () {
           _id: '5d1a00b76e0ac9ad2dc00fc0'
         });
         return user.save();
+      })
+      .then(result => {
+        const token = new Token({
+          _userId: '5d1a00b76e0ac9ad2dc00fc0',
+          token: 'ba35cd1363cd6cffde7437b8f4d231a7'
+        });
+        return token.save();
       })
       .then(() => {
         done();
@@ -99,7 +107,7 @@ describe('Auth Controller', function () {
     const req = { body: { status: 'Inactive', userId: '5d1a00b76e0ac9ad2dc00fc1' } };
 
     const res = {
-      statusCode: 404,
+      statusCode: 200,
       error: 'User not found.',
       status: function (code) {
         this.statusCode = code;
@@ -242,35 +250,60 @@ describe('Auth Controller', function () {
     });
   });
 
-  //   it('should be able to log in a verified user with valid credentials', function (done) {
-  //     const req = {
-  //       body: {
-  //         email: 'test@this.test.com',
-  //         password: 'password',
-  //         rememberMe: false
-  //       }
-  //     };
+  it('should be able to log in a verified user with valid credentials', function (done) {
+    const req = {
+      body: {
+        email: 'test@test2.com',
+        password: 'password',
+        rememberMe: false
+      }
+    };
 
-  //     const res = {
-  //       statusCode: 500,
-  //       message: '',
-  //       status: function (code) {
-  //         this.statusCode = code;
-  //         return this;
-  //       },
-  //       json: function (data) {
-  //         this.email = data.email;
-  //         this.message = data.message;
-  //       }
-  //     };
+    const res = {
+      statusCode: 500,
+      message: '',
+      token: '',
+      userId: '',
+      status: function (code) {
+        this.statusCode = code;
+        return this;
+      },
+      json: function (data) {
+        this.email = data.email;
+        this.message = data.message;
+        this.token = data.token;
+        this.userId = data.userId;
+      }
+    };
 
-  //     AuthController.login()
+    const accReq = { params: { token: 'ba35cd1363cd6cffde7437b8f4d231a7' } };
 
-  //     AuthController.login(req, res, () => {}).then(() => {
-  //       expect(res.statusCode).to.be.equal(200);
-  //       done();
-  //     });
-  //   });
+    const accRes = {
+      statusCode: 500,
+      message: '',
+      status: function (code) {
+        this.statusCode = code;
+        return this;
+      },
+      json: function (data) {
+        this.email = data.email;
+        this.message = data.message;
+      }
+    };
+
+    AccountController.confirmEmail(accReq, accRes, () => {}).then(() => {
+      expect(accRes.statusCode).to.be.equal(200);
+      expect(accRes.message).to.be.equal('Your account has been successfully verified');
+      done();
+    });
+
+    AuthController.login(req, res, () => {}).then(() => {
+      expect(res.statusCode).to.be.equal(200);
+      expect(res.token).to.be.equal('ba35cd1363cd6cffde7437b8f4d231a7');
+      expect(res.userId).to.be.equal('5d1a00b76e0ac9ad2dc00fc0');
+      done();
+    });
+  });
 
   after(function (done) {
     User.deleteMany({})
