@@ -1,7 +1,9 @@
 const expect = require('chai').expect;
 const sinon = require('sinon');
 const mongoose = require('mongoose');
+let assert = require('assert');
 
+const bcrypt = require('bcryptjs');
 const User = require('../models/user');
 const Token = require('../models/token');
 const AuthController = require('../controllers/auth');
@@ -133,7 +135,8 @@ describe('Auth Controller', function () {
         firstName: 'test',
         surname: 'ing',
         password: 'password',
-        phoneNumber: '78756463644'
+        phoneNumber: '78756463644',
+        _id: '624c939d3505a8eaee00a8d7'
       }
     };
 
@@ -250,33 +253,28 @@ describe('Auth Controller', function () {
     });
   });
 
-  it('should be able to log in a verified user with valid credentials', function (done) {
-    const req = {
-      body: {
-        email: 'test@test2.com',
-        password: 'password',
-        rememberMe: false
-      }
-    };
+  it('should save a new user without error', async function () {
+    const user = new User({
+      email: 'test3@test.com',
+      password: await bcrypt.hash('password', 12),
+      firstName: 'Test',
+      surname: 'data',
+      phoneNumber: '7584858483',
+      _id: '56cb91bdc3464f14678934ca'
+    });
+    await user.save().then(console.log('pass'));
+  });
 
-    const res = {
-      statusCode: 500,
-      message: '',
-      token: '',
-      userId: '',
-      status: function (code) {
-        this.statusCode = code;
-        return this;
-      },
-      json: function (data) {
-        this.email = data.email;
-        this.message = data.message;
-        this.token = data.token;
-        this.userId = data.userId;
-      }
-    };
+  it('should save a new token without error', function (done) {
+    let token = new Token({
+      _userId: '56cb91bdc3464f14678934ca',
+      token: 'ba35cd1363cd6cffde7437b6f4c231b7'
+    });
+    token.save(done);
+  });
 
-    const accReq = { params: { token: 'ba35cd1363cd6cffde7437b8f4d231a7' } };
+  it('should be able to verify a user', function (done) {
+    const accReq = { params: { token: 'ba35cd1363cd6cffde7437b6f4c231b7' } };
 
     const accRes = {
       statusCode: 500,
@@ -286,7 +284,6 @@ describe('Auth Controller', function () {
         return this;
       },
       json: function (data) {
-        this.email = data.email;
         this.message = data.message;
       }
     };
@@ -296,11 +293,39 @@ describe('Auth Controller', function () {
       expect(accRes.message).to.be.equal('Your account has been successfully verified');
       done();
     });
+  });
+
+  it('should be able to log in a verified user with valid credentials', function (done) {
+    const req = {
+      body: {
+        email: 'test3@test.com',
+        password: 'password',
+        rememberMe: false
+      }
+    };
+
+    const res = {
+      statusCode: 500,
+      token: '',
+      userId: '',
+      email: '',
+      status: function (code) {
+        this.statusCode = code;
+        return this;
+      },
+      json: function (data) {
+        this.email = data.email;
+        this.token = data.token;
+        this.userId = data.userId;
+        this.email = data.email;
+      }
+    };
 
     AuthController.login(req, res, () => {}).then(() => {
       expect(res.statusCode).to.be.equal(200);
-      expect(res.token).to.be.equal('ba35cd1363cd6cffde7437b8f4d231a7');
-      expect(res.userId).to.be.equal('5d1a00b76e0ac9ad2dc00fc0');
+      expect(res.token).to.be.ok;
+      expect(res.userId).to.be.equal('56cb91bdc3464f14678934ca');
+      expect(res.email).to.be.equal('test3@test.com');
       done();
     });
   });
@@ -357,7 +382,8 @@ describe('Auth Controller', function () {
   });
 
   after(function (done) {
-    User.deleteMany({})
+    mongoose.connection.db
+      .dropDatabase()
       .then(() => {
         return mongoose.disconnect();
       })
