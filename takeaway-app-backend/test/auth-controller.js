@@ -116,7 +116,6 @@ describe('Auth Controller', function () {
         return this;
       },
       json: function (data) {
-        this.userStatus = data.status;
         this.error = data.error;
       }
     };
@@ -128,15 +127,14 @@ describe('Auth Controller', function () {
     });
   });
 
-  it('should send a reponse of user creation when successfully created', function (done) {
+  it('should send a response of user creation when successfully created', function (done) {
     const req = {
       body: {
         email: 'test@this.test.com',
         firstName: 'test',
         surname: 'ing',
         password: 'password',
-        phoneNumber: '78756463644',
-        _id: '624c939d3505a8eaee00a8d7'
+        phoneNumber: '78756463644'
       }
     };
 
@@ -144,6 +142,7 @@ describe('Auth Controller', function () {
       statusCode: 500,
       message: 'User created!',
       email: 'test@this.test.com',
+      userId: '',
       status: function (code) {
         this.statusCode = code;
         return this;
@@ -159,6 +158,7 @@ describe('Auth Controller', function () {
       expect(res.statusCode).to.be.equal(201);
       expect(res.email).to.be.equal('test@this.test.com');
       expect(res.message).to.be.equal('User created!');
+      expect(res.userId).to.be.ok;
       done();
     });
   });
@@ -191,6 +191,36 @@ describe('Auth Controller', function () {
       expect(res.message).to.be.equal("email can't be empty");
       done();
     });
+  });
+
+  // validation test ------------------------------------------------------------------------------------------------------------------
+
+  it('should throw an error if the password value is empty', async () => {
+    try {
+      await new User({
+        email: 'dfd@fdfdf.com',
+        firstName: 'test',
+        surname: 'ing',
+        password: '',
+        phoneNumber: '78756463644'
+      }).save();
+    } catch (err) {
+      expect(err.errors.password.message).to.be.equal('Path `password` is required.');
+    }
+  });
+
+  it('should throw an error if the email field is empty', async () => {
+    try {
+      await new User({
+        email: '',
+        firstName: 'test',
+        surname: 'ing',
+        password: 'password',
+        phoneNumber: '78756463644'
+      }).save();
+    } catch (err) {
+      expect(err.errors.email.message).to.be.equal('Path `email` is required.');
+    }
   });
 
   it('should fail to login if account is unverified', function (done) {
