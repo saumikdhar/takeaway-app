@@ -19,12 +19,12 @@ exports.confirmEmail = async (req, res, next) => {
 
     if (!user) {
       const error = 'We were unable to find a user for this verification. Please Sign Up!';
-      res.status(401).json({ message: error });
+      res.status(404).json({ message: error });
       throw error;
     }
 
     if (user.confirmed) {
-      res.status(200).json({ message: msgs.alreadyConfirmed });
+      return res.status(200).json({ message: msgs.alreadyConfirmed });
     }
 
     if (token) {
@@ -45,6 +45,7 @@ exports.confirmEmail = async (req, res, next) => {
       error.statusCode = 500;
     }
     next(error);
+    return error;
   }
 };
 

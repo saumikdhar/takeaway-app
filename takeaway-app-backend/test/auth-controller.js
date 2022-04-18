@@ -1,7 +1,6 @@
 const expect = require('chai').expect;
 const sinon = require('sinon');
 const mongoose = require('mongoose');
-let assert = require('assert');
 
 const bcrypt = require('bcryptjs');
 const User = require('../models/user');
