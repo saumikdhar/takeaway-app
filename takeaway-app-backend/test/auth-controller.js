@@ -291,7 +291,7 @@ describe('Auth Controller', function () {
       phoneNumber: '7584858483',
       _id: '56cb91bdc3464f14678934ca'
     });
-    await user.save().then(console.log('pass'));
+    await user.save().then(console.log(''));
   });
 
   it('should save a new token without error', function (done) {

@@ -6,7 +6,6 @@ const msgs = require('../services/email/msgs');
 const bcrypt = require('bcryptjs');
 const User = require('../models/user');
 const Token = require('../models/token');
-const AuthController = require('../controllers/auth');
 const AccountController = require('../controllers/account');
 
 describe('Account Controller', function () {
@@ -202,6 +201,90 @@ describe('Account Controller', function () {
     AccountController.confirmEmail(accReq, accRes, () => {}).then(() => {
       expect(accRes.statusCode).to.be.equal(400);
       expect(accRes.error).to.be.equal(msgs.linkNotFound);
+      done();
+    });
+  });
+
+  it('should send a 400 error reponse if token not found', function (done) {
+    const req = { params: { token: 'thisIsAFakeToken' } };
+
+    const res = {
+      statusCode: 200,
+      error: '',
+      status: function (code) {
+        this.statusCode = code;
+        return this;
+      },
+      json: function (data) {
+        this.error = data.error;
+      }
+    };
+
+    AccountController.resendLink(req, res, () => {}).then(() => {
+      expect(res.statusCode).to.be.equal(400);
+      expect(res.error).to.be.equal(msgs.linkNotFound);
+      done();
+    });
+  });
+
+  it('should resend a new link if the current link is valid but expired', function (done) {
+    const req = { params: { token: 'ca35cd1363cd6cffde7437b6f4c231b8' } };
+
+    const res = {
+      statusCode: 500,
+      message: '',
+      email: '',
+      userId: '',
+      status: function (code) {
+        this.statusCode = code;
+        return this;
+      },
+      json: function (data) {
+        this.message = data.message;
+        this.email = data.email;
+        this.userId = data.userId;
+      }
+    };
+
+    AccountController.resendLink(req, res, () => {}).then(() => {
+      expect(res.statusCode).to.be.equal(201);
+      expect(res.message).to.be.equal('Sent a new verification link');
+      expect(res.userId.toString()).to.be.equal('5d1a00b76e0ac9ad2dc00fc0');
+      expect(res.email).to.be.equal('test2@test.com');
+      done();
+    });
+  });
+
+  it('should save a expired token without a valid user link', function (done) {
+    const date = new Date();
+    let token = new Token({
+      _userId: '625f0842126c4cfd2af911a9',
+      token: '25f084ece698f70c5742d83',
+      expireAt: date.setDate(date.getDate())
+    });
+    token.save(done);
+  });
+
+  it('should send a 404 error reponse if user not found', function (done) {
+    const req = { params: { token: '25f084ece698f70c5742d83' } };
+
+    const res = {
+      statusCode: 200,
+      message: '',
+      status: function (code) {
+        this.statusCode = code;
+        return this;
+      },
+      json: function (data) {
+        this.message = data.message;
+      }
+    };
+
+    AccountController.resendLink(req, res, () => {}).then(() => {
+      expect(res.statusCode).to.be.equal(404);
+      expect(res.message).to.be.equal(
+        'We were unable to find a user for this verification. Please Sign Up!'
+      );
       done();
     });
   });
