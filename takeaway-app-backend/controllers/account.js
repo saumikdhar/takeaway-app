@@ -19,12 +19,12 @@ exports.confirmEmail = async (req, res, next) => {
 
     if (!user) {
       const error = 'We were unable to find a user for this verification. Please Sign Up!';
-      res.status(401).json({ message: error });
+      res.status(404).json({ message: error });
       throw error;
     }
 
     if (user.confirmed) {
-      res.status(200).json({ message: msgs.alreadyConfirmed });
+      return res.status(200).json({ message: msgs.alreadyConfirmed });
     }
 
     if (token) {
@@ -32,7 +32,6 @@ exports.confirmEmail = async (req, res, next) => {
       const error = msgs.linkNotFound;
 
       if (currentDate > token.expireAt) {
-        console.log('token expired', token);
         return res.status(400).json({ error });
       }
     }
@@ -45,6 +44,7 @@ exports.confirmEmail = async (req, res, next) => {
       error.statusCode = 500;
     }
     next(error);
+    return error;
   }
 };
 
@@ -63,7 +63,6 @@ exports.resendLink = async (req, res, next) => {
     if (token) {
       const currentDate = new Date();
 
-      console.log(currentDate);
       if (currentDate > token.expireAt) {
         const newToken = new Token({
           _userId: token._userId,
@@ -75,7 +74,7 @@ exports.resendLink = async (req, res, next) => {
 
         if (!user) {
           const error = 'We were unable to find a user for this verification. Please Sign Up!';
-          res.status(401).json({ message: error });
+          res.status(404).json({ message: error });
           throw error;
         }
 

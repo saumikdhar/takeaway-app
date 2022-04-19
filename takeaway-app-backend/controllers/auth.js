@@ -62,6 +62,7 @@ exports.login = async (req, res, next) => {
       res.status(404).json({ message: error });
       throw error;
     }
+
     const isEqual = await bcrypt.compare(password, user.password);
     if (!isEqual) {
       const error = 'Email address or password is incorrect';
@@ -138,7 +139,7 @@ exports.getUserStatus = async (req, res, next) => {
 exports.updateUserStatus = async (req, res, next) => {
   const newStatus = req.body.status;
   try {
-    const user = await User.findById(req.userId);
+    const user = await User.findById(req.body.userId);
     if (!user) {
       const error = new Error('User not found.');
       error.statusCode = 404;
@@ -147,7 +148,7 @@ exports.updateUserStatus = async (req, res, next) => {
     }
     user.status = newStatus;
     await user.save();
-    res.status(200).json({ message: 'User updated.' });
+    res.status(200).json({ message: 'User status updated.' });
   } catch (err) {
     if (!err.statusCode) {
       err.statusCode = 500;
@@ -160,12 +161,14 @@ exports.userDetails = async (req, res, next) => {
   const userEmail = req.userEmail;
 
   try {
-    const user = await User.findOne({ where: { email: userEmail } });
+    const user = await User.findOne({ email: userEmail });
+
     if (!user) {
       const error = 'User not found!';
       res.status(404).json({ message: error });
       throw error;
     }
+
     res.status(200).json({ userId: user._id.toString(), userEmail });
   } catch (error) {
     if (!error.statusCode) {

@@ -2,7 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 
 const authRoutes = require('./routes/auth');
-const mailRoutes = require('./routes/mail');
+const accountRoutes = require('./routes/account');
 const templates = require('./services/email/template');
 const sendEmail = require('./services/email/send');
 
@@ -20,7 +20,7 @@ app.use((req, res, next) => {
 });
 
 app.use('/auth', authRoutes);
-app.use('/account', mailRoutes);
+app.use('/account', accountRoutes);
 app.listen(8080);
 
 app.use((error, req, res, next) => {
