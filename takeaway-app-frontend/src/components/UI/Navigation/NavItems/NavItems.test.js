@@ -2,7 +2,6 @@ import React from 'react';
 import NavItems from './NavItems';
 import { Provider } from 'react-redux';
 import { render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 import store from '../../../../store/index';
 import { BrowserRouter } from 'react-router-dom';
 import { userAuth, authActions } from '../../../../store/auth-slice';
