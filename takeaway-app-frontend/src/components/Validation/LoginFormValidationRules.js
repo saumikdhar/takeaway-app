@@ -1,7 +1,11 @@
 import zxcvbn from 'zxcvbn';
 
 export const isEmpty = value => {
-  if (value.trim() === '') {
+  if (typeof value === 'string') {
+    if (value.trim() === '') {
+      return true;
+    }
+  } else {
     return true;
   }
   return false;
@@ -36,14 +40,6 @@ export const checkValidity = (value, rules) => {
     return 'is required!';
   }
 
-  if (rules.validateName) {
-    return validateName(value);
-  }
-
-  if (rules.validatePhone) {
-    return validatePhone(value);
-  }
-
   if (rules.minLength) {
     if (value.length < rules.minLength) {
       return 'needs to have minimum of ' + rules.minLength + ' characters!';
@@ -55,6 +51,15 @@ export const checkValidity = (value, rules) => {
       return 'can only have a maximum of ' + rules.maxLength + ' characters!';
     }
   }
+
+  if (rules.validateName) {
+    return validateName(value);
+  }
+
+  if (rules.validatePhone) {
+    return validatePhone(value);
+  }
+
   return false;
 };
 
