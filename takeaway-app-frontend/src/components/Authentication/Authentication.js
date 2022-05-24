@@ -59,7 +59,7 @@ const Authentication = () => {
     return (
       <section className={classes.authentication}>
         <h1>Sign In</h1>
-        <form onSubmit={submitHandler}>
+        <form onSubmit={submitHandler} data-testid="form">
           <div className={classes.control}>
             {errorMessage && <p className={classes.error}> {errorMessage}!</p>}
             <label htmlFor="email">Your Email</label>
