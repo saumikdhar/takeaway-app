@@ -15,7 +15,13 @@ const ModalOverlay = props => {
   );
 };
 
-const portalElement = document.getElementById('overlays');
+let portalElement = document.getElementById('overlays');
+
+if (!portalElement) {
+  portalElement = document.createElement('div');
+  portalElement.setAttribute('id', 'overlays');
+  document.body.append(portalElement);
+}
 
 const Modal = props => {
   return (
