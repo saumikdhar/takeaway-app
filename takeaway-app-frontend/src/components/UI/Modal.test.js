@@ -1,18 +1,12 @@
 import Modal from './Modal';
-import { BrowserRouter } from 'react-router-dom';
-import { render, screen } from '@testing-library/react';
+import { cleanup, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 describe('Modal', () => {
-  let wrapper;
-
-  beforeEach(() => {
-    wrapper = component => <BrowserRouter>{component}</BrowserRouter>;
-  });
+  afterEach(cleanup);
 
   test('should show Modal when component is rendered', () => {
     const handleClose = jest.fn();
-    const root = document.createElement('overlays');
 
     const { getByText } = render(
       <Modal>
@@ -24,6 +18,23 @@ describe('Modal', () => {
 
     const button = screen.getByRole('button', { name: /close/i });
     userEvent.click(button);
+
+    expect(handleClose).toHaveBeenCalledTimes(1);
+  });
+
+  test('should hide Modal when backdrop is clicked', () => {
+    const handleClose = jest.fn();
+
+    const { getByText } = render(
+      <Modal onClose={handleClose}>
+        <div>test</div>
+      </Modal>
+    );
+    expect(getByText('test')).toBeInTheDocument();
+
+    const modalOverlay = document.querySelector('#overlays > div:nth-child(1)');
+
+    userEvent.click(modalOverlay);
 
     expect(handleClose).toHaveBeenCalledTimes(1);
   });
