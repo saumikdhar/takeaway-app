@@ -146,7 +146,7 @@ const SignUp = () => {
           <input type="email" id="email" required ref={emailInputRef} />
           {formInputsValidity.emailAddress && (
             <div className={classes.error}>
-              <div className={classes.left}>{formInputsValidity.emailAddress}</div>
+              <div className={classes.left}>Email {formInputsValidity.emailAddress}</div>
             </div>
           )}
         </div>

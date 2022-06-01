@@ -73,9 +73,9 @@ export const validateName = value => {
 };
 
 export const validatePhone = phoneNumber => {
-  var phoneNumberPattern =
-    /^\s*(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*$/;
-  if (!phoneNumberPattern.test(phoneNumber)) {
+  // var phoneNumberPattern =
+  //   /^\s*(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*$/;
+  if (isNaN(+phoneNumber)) {
     return 'is invalid!';
   }
   return false;
