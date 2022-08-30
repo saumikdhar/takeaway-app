@@ -1,6 +1,7 @@
 import classes from './Toolbar.module.css';
 import NavItems from '../NavItems/NavItems';
 import mealsImage from '../../../../assets/meals.jpg';
+import restaurantLogo from '../../../../assets/exotic_shaad_logo.png';
 
 const Toolbar = props => {
   return (
@@ -10,6 +11,7 @@ const Toolbar = props => {
         <header className={classes.header}>
           <div className={classes.header2}>
             <h1>Exotic Shaad</h1>
+            {/* <img src={restaurantLogo} alt="logo of exotic shaad" /> */}
           </div>
           <nav className={classes.DesktopOnly}>
             <NavItems />
