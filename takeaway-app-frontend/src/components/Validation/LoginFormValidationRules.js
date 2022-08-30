@@ -22,7 +22,7 @@ export const validateEmail = value => {
   if (isEmpty(value.email)) {
     return 'Email address is required';
   } else if (!/^[a-zA-Z0-9]+@(?:[a-zA-Z0-9]+\.)+[A-Za-z]+$/.test(value.email)) {
-    return 'Email address is invalid';
+    return 'Email address is invalid!';
   }
   return false;
 };

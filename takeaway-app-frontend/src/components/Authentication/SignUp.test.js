@@ -1,4 +1,5 @@
 import SignUp from './SignUp';
+import Authentication from './Authentication';
 import { Provider } from 'react-redux';
 import { render, screen, fireEvent, cleanup } from '@testing-library/react';
 import store from '../../store/index';
@@ -20,6 +21,15 @@ describe('Authentication', () => {
   afterEach(() => {
     store.dispatch(authActions.clearState());
     jest.clearAllMocks();
+  });
+
+  test('user can click on the sign up link', () => {
+    render(wrapper(<Authentication />));
+
+    expect(screen.getByText("Don't have an account? Sign Up").closest('a')).toHaveAttribute(
+      'href',
+      '/account/register'
+    );
   });
 
   test('should return error message if any fields are empty on submission', () => {
@@ -91,5 +101,46 @@ describe('Authentication', () => {
     expect(onSubmit).toHaveBeenCalled();
 
     expect(screen.getByText(/phone number is invalid!/i)).toBeInTheDocument();
+  });
+
+  test('should return error message if email is invalid', () => {
+    const onSubmit = jest.fn();
+
+    render(wrapper(<SignUp onSubmit={onSubmit()} />));
+
+    const emailInput = screen.getByRole('textbox', { name: /your email/i });
+    userEvent.type(emailInput, 'test@test');
+
+    const button = screen.getByRole('button', { name: /create account/i });
+
+    userEvent.click(button);
+    expect(onSubmit).toHaveBeenCalled();
+
+    expect(screen.getByText(/email address is invalid!/i)).toBeInTheDocument();
+  });
+
+  test('user can sign up with a new email address ', () => {
+    const onSubmit = jest.fn();
+
+    render(wrapper(<SignUp onSubmit={onSubmit()} />));
+
+    const firstNameInput = screen.getByRole('textbox', { name: /your first name/i });
+    const surnameInput = screen.getByRole('textbox', { name: /your surname/i });
+    const phoneNumberInput = screen.getByRole('textbox', { name: /your phone number/i });
+    const passwordInput = screen.getByLabelText(/your password/i);
+    const emailInput = screen.getByRole('textbox', { name: /your email/i });
+
+    userEvent.type(firstNameInput, 'Foo');
+    userEvent.type(surnameInput, 'Bar');
+    userEvent.type(phoneNumberInput, '7564736463');
+    userEvent.type(passwordInput, 'SkfjsjJ54?');
+    userEvent.type(emailInput, 'test@test.com');
+
+    const button = screen.getByRole('button', { name: /create account/i });
+
+    userEvent.click(button);
+    expect(onSubmit).toHaveBeenCalled();
+
+    // expect(screen.getByText(/email address is invalid!/i)).toBeInTheDocument();
   });
 });
