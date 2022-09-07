@@ -1,13 +1,14 @@
 import classes from './Toolbar.module.css';
 import NavItems from '../NavItems/NavItems';
 import mealsImage from '../../../../assets/meals.jpg';
+import DrawerToggle from '../Sidebar/DrawerToggle/DrawerToggle';
 
 const Toolbar = props => {
   return (
     <>
       <header className={classes.Toolbar}>
-        {/*<DrawerToggle clicked={props.drawerToggleClicked}/>*/}
         <header className={classes.header}>
+          <DrawerToggle clicked={props.drawerToggleClicked} />
           <div className={classes.header2}>
             <h1>Exotic Shaad</h1>
           </div>

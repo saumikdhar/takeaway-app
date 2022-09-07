@@ -13,3 +13,11 @@
     flex-flow: row;
   }
 }
+
+.NavigationItems img {
+  height: 20px;
+}
+
+.Icon {
+  margin-right: 20px;
+}

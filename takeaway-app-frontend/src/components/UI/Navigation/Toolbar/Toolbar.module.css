@@ -65,4 +65,12 @@
   .DesktopOnly {
     display: none;
   }
+
+  .header {
+    padding: 0 2%;
+  }
+
+  .header2 {
+    width: unset;
+  }
 }

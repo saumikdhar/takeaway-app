@@ -2,9 +2,10 @@ import { withRouter, Switch, Route, Redirect } from 'react-router-dom';
 import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { authSelector, checkAuthState } from './store/auth-slice';
+import Layout from './components/UI/Layout/Layout';
 
 import Home from './components/pages/Home';
-import Toolbar from './components/UI/Navigation/Toolbar/Toolbar';
+// import Toolbar from './components/UI/Navigation/Toolbar/Toolbar';
 import Footer from './components/UI/Navigation/Footer/Footer';
 import Authentication from './components/Authentication/Authentication';
 import SignUp from './components/Authentication/SignUp';
@@ -56,7 +57,7 @@ const App = props => {
   ) {
     return (
       <>
-        <Toolbar />
+        <Layout />
         {routes}
         <Footer />
       </>
@@ -65,7 +66,7 @@ const App = props => {
 
   return (
     <div>
-      <Toolbar />
+      <Layout />
       {routes}
       <Footer />
     </div>
