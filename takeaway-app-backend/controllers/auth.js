@@ -108,7 +108,13 @@ exports.login = async (req, res, next) => {
         'p820+e23sMORL+Vt/5CgxnEw1fXKWAUj37tgDAfFwFRD9/j28vHY',
       { expiresIn: expiry }
     );
-    res.status(200).json({ token: token, userId: user._id.toString(), email });
+    res.status(200).json({
+      token: token,
+      userId: user._id.toString(),
+      email,
+      firstName: user.firstName,
+      surname: user.surname
+    });
   } catch (error) {
     if (!error.statusCode) {
       error.statusCode = 500;
@@ -169,7 +175,12 @@ exports.userDetails = async (req, res, next) => {
       throw error;
     }
 
-    res.status(200).json({ userId: user._id.toString(), userEmail });
+    res.status(200).json({
+      userId: user._id.toString(),
+      userEmail,
+      firstName: user.firstName,
+      surname: user.surname
+    });
   } catch (error) {
     if (!error.statusCode) {
       error.statusCode = 500;
