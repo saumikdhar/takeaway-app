@@ -12,17 +12,18 @@ export const NavItems = props => {
   return (
     <ul className={classes.NavigationItems}>
       <NavItem clicked={props.navClicked} link="/home">
-        <img src={homeIcon} alt="home" className={classes.Icon} />
+        {props.show ? <img src={homeIcon} alt="home" className={classes.Icon} /> : null}
         Home
       </NavItem>
       {!isLoggedIn && (
         <NavItem clicked={props.navClicked} link="/account/login">
-          <img src={loginIcon} alt="login" className={classes.Icon} />
-          Login{' '}
+          {props.show ? <img src={loginIcon} alt="login" className={classes.Icon} /> : null}
+          Login
         </NavItem>
       )}
       {isLoggedIn && (
         <NavItem clicked={props.navClicked} link="/logout">
+          {props.show ? <img src={loginIcon} alt="login" className={classes.Icon} /> : null}
           Logout
         </NavItem>
       )}

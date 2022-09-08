@@ -139,7 +139,9 @@ const authSlice = createSlice({
     isLoggedIn: false,
     isFetching: false,
     errorMessage: '',
-    message: ''
+    message: '',
+    firstName: '',
+    surname: ''
   },
 
   reducers: {
@@ -159,6 +161,8 @@ const authSlice = createSlice({
       state.message = '';
       localStorage.removeItem('token');
       localStorage.removeItem('expirationDate');
+      state.firstName = '';
+      state.surname = '';
     },
 
     checkAuthTimeout(expirationTime, state) {
@@ -176,6 +180,8 @@ const authSlice = createSlice({
       state.userId = payload.userId;
       state.errorMessage = '';
       state.isLoggedIn = true;
+      state.firstName = payload.firstName;
+      state.surname = payload.surname;
     },
     [checkAuthState.pending]: state => {
       state.isFetching = true;
@@ -192,6 +198,8 @@ const authSlice = createSlice({
       state.userId = payload.userId;
       state.errorMessage = '';
       state.isLoggedIn = true;
+      state.firstName = payload.firstName;
+      state.surname = payload.surname;
     },
     [userAuth.rejected]: (state, { payload }) => {
       console.log('payload', payload);

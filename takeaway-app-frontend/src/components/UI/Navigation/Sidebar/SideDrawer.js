@@ -3,12 +3,15 @@ import classes from './SideDrawer.module.css';
 // import Logo from '../../../';
 import NavItems from '../NavItems/NavItems';
 import Backdrop from '../../Backdrop/Backdrop';
+import { useSelector } from 'react-redux';
+import { authSelector } from '../../../../store/auth-slice';
 
 const SideDrawer = props => {
   let attachedClasses = [classes.SideDrawer, classes.Close];
   if (props.open) {
     attachedClasses = [classes.SideDrawer, classes.Open];
   }
+  const { email, firstName, surname } = useSelector(authSelector);
   return (
     <>
       <Backdrop show={props.open} clicked={props.closed} />
@@ -20,13 +23,15 @@ const SideDrawer = props => {
               <h1>Exotic Shaad</h1>
             </div>
             <div className={classes['drawer-meta']}>
-              <span className={classes['drawer-name']}>Beth Johnston</span>
-              <span className={classes['drawer-email']}>bjohnston@suvoda.com</span>
+              <span className={classes['drawer-name']}>
+                {firstName} {surname}
+              </span>
+              <span className={classes['drawer-email']}>{email ? email : 'Please sign in'}</span>
             </div>
           </div>
         </div>
         <nav className={classes.navItems}>
-          <NavItems navClicked={props.closed} />
+          <NavItems showIcon={props.open} navClicked={props.closed} />
         </nav>
       </div>
     </>

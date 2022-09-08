@@ -52,6 +52,8 @@
     padding-left: 36px;
     padding-top: 13px;
     padding-bottom: 13px;
+    display: flex;
+    align-items: center;
   }
 
   .NavigationItem {
